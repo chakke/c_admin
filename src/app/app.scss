@@ -1,6 +1,4 @@
 // http://ionicframework.com/docs/theming/
-
-
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These
@@ -14,3 +12,194 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+@-webkit-keyframes background {
+    0% {
+        background-position: 0% 50%
+    }
+    50% {
+        background-position: 100% 50%
+    }
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+@-moz-keyframes background {
+    0% {
+        background-position: 0% 50%
+    }
+    50% {
+        background-position: 100% 50%
+    }
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+@keyframes background {
+    0% {
+        background-position: 0% 50%
+    }
+    50% {
+        background-position: 100% 50%
+    }
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+:focus,
+ :active {
+    outline: none !important;
+}
+
+.ba-form {
+    padding: 15px map-get($BASizes, paddingRight) 15px map-get($BASizes, defaultPadding);
+    $inputHeight: 2.5em;
+    $divPadding: 6px;
+    background-color: #f9f9f9;
+    margin: 0 0 20px 0;
+    .validate-message {
+        margin-top: 5px;
+        display: block;
+        color: map-get($BAColors, gray);
+        text-align: center;
+    }
+    ion-datetime {
+        position: absolute;
+        top: $divPadding;
+        left: $divPadding;
+        height: $inputHeight;
+        width: 1.5*$inputHeight;
+        z-index: 10;
+        .datetime-text {
+            display: none;
+        }
+    }
+    .input-div {
+        display: flex;
+        position: relative;
+        padding: $divPadding;
+    }
+    .text-input {
+        width: 100%;
+        border: solid 1px map-get($BAColors, lightgray);
+        border-radius: 5px;
+        line-height: $inputHeight;
+        padding-left: 1*$inputHeight;
+        text-align: center;
+        color: map-get($BAColors, black);
+        margin: 0;
+        padding-right: 10px;
+        background-color: map-get($BAColors, white);
+    }
+    ion-textarea {
+        .text-input {
+            border-radius: 10px !important;
+            height: 3 * $inputHeight !important;
+        }
+    }
+    .icon {
+        position: absolute;
+        top: $divPadding + 1px;
+        left: $divPadding + 1px;
+        height: $inputHeight;
+        color: map-get($BAColors, primary);
+        width: 1.5*$inputHeight;
+        line-height: $inputHeight;
+        text-align: center;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: map-get($map: $BAColors, $key: white);
+        border-radius: 5px;
+        img {
+            width: 0.5 * $inputHeight;
+            height: 0.5 * $inputHeight;
+            margin: auto;
+        }
+    }
+    .button-right {
+        position: absolute;
+        top: $divPadding;
+        right: $divPadding;
+        height: $inputHeight;
+        color: map-get($BAColors, primary);
+        width: 1.5*$inputHeight;
+        line-height: $inputHeight;
+        text-align: center;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .ng-invalid:not(form) {
+        border-color: rgba(187, 42, 50, 0.69);
+        .text-input {
+            border-color: rgba(187, 42, 50, 0.69);
+        }
+    }
+}
+
+.ba-form-center {
+    margin: auto;
+}
+
+.ba-link {
+    cursor: pointer;
+}
+
+.ba-button {
+    padding: 8px 16px;
+    border-radius: 20px;
+    color: map-get($BAColors, white);
+    background-color: map-get($BAColors, primary);
+}
+
+.ba-button,
+.ba-button-outline {
+    &:hover {
+        background: linear-gradient(-45deg, map-get($map: $BAColors, $key: blue), map-get($map: $BAColors, $key: primary));
+        background-size: 200% 200%;
+        -webkit-animation: background 2s ease infinite;
+        -moz-animation: background 2s ease infinite;
+        animation: background 2s ease infinite;
+    }
+}
+
+.ba-button-outline {
+    padding: 8px 16px;
+    border-radius: 20px;
+    color: map-get($BAColors, primary);
+    background-color: map-get($BAColors, white);
+    border: solid 1px;
+}
+
+.ng-touched.ng-invalid:not(form) {
+    .text-input {
+        border-color: rgba(187, 43, 51, 0.6);
+    }
+}
+
+.ng-touched.ng-valid:not(form) {
+    .text-input {
+        border-color: map-get($BAColors, gray);
+        color: map-get($BAColors, gray);
+    }
+}
+
+.validate-message {
+    margin-top: 5px;
+    display: block;
+    color: gray;
+}
+
+//Style for desktop and above
+@media (min-width: 768px) {}
+
+//Style for tablet and above
+@media(min-width: 576px) {}
+
+//Style for only mobile
+@media(max-width: 576px) {}
