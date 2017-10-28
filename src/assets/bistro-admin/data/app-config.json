@@ -1,0 +1,40 @@
+{
+    "version": "1.0",
+    "menu-items": [{
+            "icon": "<i class='fa fa-home' aria-hidden='true'></i>",
+            "title": "Dashboard"
+        },
+        {
+            "icon": "<i class='fa fa-suitcase' aria-hidden='true'></i>",
+            "title": "Thương hiệu"
+        },
+        {
+            "icon": "<i class='fa fa-building' aria-hidden='true'></i>",
+            "title": "Nhà hàng"
+        },
+        {
+            "icon": "<i class='fa fa-male' aria-hidden='true'></i>",
+            "title": "Nhân viên"
+        },
+        {
+            "icon": "<i class='fa fa-user' aria-hidden='true'></i>",
+            "title": "Khách hàng"
+        },
+        {
+            "icon": "<i class='fa fa-cutlery' aria-hidden='true'></i>",
+            "title": "Thực đơn"
+        },
+        {
+            "icon": "<i class='fa fa-bell' aria-hidden='true'></i>",
+            "title": "Đơn đặt hàng"
+        },
+        {
+            "icon": "<i class='fa fa-gift' aria-hidden='true'></i>",
+            "title": "Khuyến mãi"
+        },
+        {
+            "icon": "<i class='fa fa-money' aria-hidden='true'></i>",
+            "title": "Thu chi"
+        }
+    ]
+}

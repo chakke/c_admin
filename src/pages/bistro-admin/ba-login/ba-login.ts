@@ -29,7 +29,7 @@ export class BaLoginPage {
     this.isSubmitted = true;
     if (this.loginForm.valid) {
       console.log("login");
-      this.navCtrl.popToRoot();
+      this.navCtrl.setRoot("BaDashboardPage");
     } else {
       this.checkForm();
     }

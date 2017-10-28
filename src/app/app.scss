@@ -53,6 +53,57 @@
     outline: none !important;
 }
 
+.scroll-content {
+    overflow: auto;
+}
+
+.ba-pointer {
+    cursor: pointer;
+}
+
+.ba-content {
+    padding: map-get($map: $BASizes, $key: defaultPadding);
+    color: map-get($map: $BAColors, $key: black);
+    width: 100%;
+    min-height: 100%;
+    background-color: map-get($map: $BAColors, $key: lightgray);
+    .ba-main-title {
+        text-transform: uppercase;
+        padding-left: 15px;
+    }
+}
+
+$headerHeight: 3*map-get($map: $BASizes, $key: lineHeight);
+.ba-menu {
+    color: map-get($map: $BAColors, $key: white);
+    .ba-menu-header {
+        height: $headerHeight;
+        text-align: center;
+        font-size: 0.5*$headerHeight;
+        background-color: map-get($map: $BAColors, $key: primary);
+        line-height: $headerHeight;
+    }
+    .ba-menu-content {
+        background-color: map-get($map: $BAColors, $key: primary);
+        .ba-menu-item {
+            height: 2 * map-get($map: $BASizes, $key: lineHeight);
+            line-height: 2 * map-get($map: $BASizes, $key: lineHeight);
+            font-size: 1em;
+            color: map-get($map: $BAColors, $key: white);
+            display: flex;
+            .icon {
+                width: 2 * map-get($map: $BASizes, $key: lineHeight);
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-right: 10px;
+                font-size: .9em;
+            }
+        }
+    }
+}
+
 .ba-form {
     padding: 15px map-get($BASizes, paddingRight) 15px map-get($BASizes, defaultPadding);
     $inputHeight: 2.5em;

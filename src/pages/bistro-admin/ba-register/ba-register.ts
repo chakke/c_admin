@@ -32,7 +32,7 @@ export class BaRegisterPage {
     this.isSubmitted = true;
     if (this.loginForm.valid) {
       console.log("register");
-      this.navCtrl.popToRoot();
+      this.navCtrl.setRoot("BaDashboardPage");
     } else {
       this.checkForm();
     }

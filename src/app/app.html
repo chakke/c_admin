@@ -1,1 +1,17 @@
-<ion-nav [root]="rootPage"></ion-nav>
+<ion-menu class="ba-menu" [content]="content">
+    <ion-header class="ba-menu-header">
+        <span class="vendor">
+                Bistro
+        </span>
+    </ion-header>
+    <ion-content class="ba-menu-content">
+        <div class="ba-menu-item" *ngFor="let item of menuItems">
+            <span class="icon" [innerHTML]="item.icon">                
+            </span>
+            <span class="title">
+                {{item.title}}
+            </span>
+        </div>
+    </ion-content>
+</ion-menu>
+<ion-nav #content [root]="rootPage"></ion-nav>
