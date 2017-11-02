@@ -13,6 +13,8 @@ import { AppControllerProvider } from '../providers/bistro-admin/app-controller/
 import { BistroHttpServiceProvider } from '../providers/bistro-admin/bistro-admin-http-service/bistro-admin-http-service';
 import { HttpService } from '../providers/http-service';
 import { ProgressControllerProvider } from '../providers/bistro-admin/progress-controller/progress-controller';
+import { RestaurantControllerProvider } from '../providers/bistro-admin/restaurant-controller/restaurant-controller';
+import { ProvinceControllerProvider } from '../providers/bistro-admin/province-controller/province-controller';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { ProgressControllerProvider } from '../providers/bistro-admin/progress-c
     AppControllerProvider,
     BistroHttpServiceProvider,
     HttpService,
-    ProgressControllerProvider
+    ProgressControllerProvider,
+    RestaurantControllerProvider,
+    ProvinceControllerProvider
   ]
 })
 export class AppModule { }

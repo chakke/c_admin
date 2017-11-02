@@ -2,9 +2,13 @@ import { Injectable } from '@angular/core';
 
 import { Vendor } from '../classes/vendor';
 import { User } from '../classes/user';
+import { Province } from '../classes/province';
 
 import { BistroHttpServiceProvider } from '../bistro-admin-http-service/bistro-admin-http-service';
 import { ResourceLoader } from '../../resource-loader/resource-loader';
+import { RestaurantControllerProvider } from '../restaurant-controller/restaurant-controller';
+import { ProvinceControllerProvider } from '../province-controller/province-controller';
+
 import { Config } from '../classes/config';
 import { AssetsUrl } from '../app-constant';
 
@@ -25,7 +29,9 @@ export class AppControllerProvider {
   constructor(
     private toastCtrl: ToastController,
     private app: App,
-    private httpService: BistroHttpServiceProvider) {
+    private httpService: BistroHttpServiceProvider,
+    private restaurantController: RestaurantControllerProvider,
+    private provinceController: ProvinceControllerProvider) {
     this.resourceLoader = new ResourceLoader();
     this.config = new Config();
     this.loadConfig().then(() => {
@@ -34,8 +40,8 @@ export class AppControllerProvider {
       if (this.menuItemChangeHandler) {
         this.menuItemChangeHandler(this.menuItems);
       }
+      this.loadProvince();
       this.loadUser();
-      this.loadVendor();
     });
   }
 
@@ -118,7 +124,8 @@ export class AppControllerProvider {
   }
 
   loadUser() {
-    this.user = new User("Ngọc Truynh", "Truynhcv@gmail.com", "0969696969", "69 Trần Duy Hưng, Cầu Giấy, Hà Nội", "123456");
+    this.user = new User("B-Gate", "bgate@gmail.com", "0969696969", "69 Trần Duy Hưng, Cầu Giấy, Hà Nội", "123456");
+    this.loadVendor();
   }
 
   getUser() {
@@ -126,11 +133,34 @@ export class AppControllerProvider {
   }
 
   loadVendor() {
-    this.vendor = new Vendor(this.user, "Dancer", "Dancer là chuỗi thương hiệu nhà hàng, quán cà phê sang trọng, đẳng cấp. Đến với Dancer bạn sẽ được trải nghiệm chất lượng phục vụ chuyên nghiệp cùng sản phẩm dịch vụ tuyệt vời.",
-      "assets/bistro-admin/images/logo.png", "abc@example.com", "0969696969", "Khu dân cư số 10, Phan Đình Phùng, Tp. Thái Nguyên, Thái Nguyên")
+    this.vendor = new Vendor(1, this.user, "Dancer", "Dancer là chuỗi thương hiệu nhà hàng, quán cà phê sang trọng, đẳng cấp. Đến với Dancer bạn sẽ được trải nghiệm chất lượng phục vụ chuyên nghiệp cùng sản phẩm dịch vụ tuyệt vời.",
+      "assets/bistro-admin/images/logo.png", "abc@example.com", "0969696969", "Khu dân cư số 10, Phan Đình Phùng, Tp. Thái Nguyên, Thái Nguyên");
+    this.loadRestaurant();
   }
 
   getVendor() {
     return this.vendor;
+  }
+
+  loadRestaurant(city?: Province, keyword?: string) {
+    this.httpService.getRestaurantByVendor(this.vendor.id, city ? city.id + '' : null, keyword ? keyword : null).then(data => {
+      if (data && data.content)
+        this.restaurantController.updateData(data.content, this.vendor, this.user);
+    })
+  }
+
+  getRestauranController() {
+    return this.restaurantController;
+  }
+
+  loadProvince() {
+    this.httpService.getProvince().then(data => {
+      if (data && data.content)
+        this.provinceController.updateData(data.content);
+    })
+  }
+
+  getProvincecontroller() {
+    return this.provinceController;
   }
 }

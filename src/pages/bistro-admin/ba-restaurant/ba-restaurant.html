@@ -6,6 +6,41 @@
 <ion-content>
     <div class="ba-content">
         <ba-title [title]="'Quản lý nhà hàng'"></ba-title>
-        <ba-buttons-function [showButton]="{buttonAdd: true, buttonDelete: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
+        <ba-buttons-function [showButton]="{buttonAdd: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
+        <div class="ba-section">
+            <div class="section-body">
+                <div class="table table-responsive table-bordered">
+                    <table class="table">
+                        <tr>
+                            <th text-center>STT</th>
+                            <th>Tên nhà hàng</th>
+                            <th>Email</th>
+                            <th>Thành phố</th>
+                            <th>Logo</th>
+                            <th>Trạng Thái</th>
+                            <th>Tác vụ</th>
+                        </tr>
+                        <tr *ngFor="let restaurant of restaurants; let i = index">
+                            <td text-center>{{i+1}}</td>
+                            <td>{{restaurant.name}}</td>
+                            <td>{{restaurants.email}}</td>
+                            <td>{{restaurant.city.name}}</td>
+                            <td text-center>
+                                <img src="assets/bistro-admin/images/logo.png" alt="Logo">
+                            </td>
+                            <td>Hoạt động</td>
+                            <td>
+                                <button class="btn btn-success">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                </button>
+                                <button class="btn btn-danger" (click)="delete(restaurant)">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </ion-content>

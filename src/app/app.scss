@@ -90,6 +90,10 @@
     }
 }
 
+.ba-section{
+    margin: 15px 0;
+}
+
 .bold {
     font-weight: bold;
 }
@@ -124,6 +128,15 @@
 .ck-editor__editable {
     padding-top: 10px !important;
     background-color: #FFF;
+}
+
+.table{
+    .btn{
+        margin-bottom: 5px;
+    }
+    img{
+        max-width: 100px;
+    }
 }
 
 .ba-flexbox {

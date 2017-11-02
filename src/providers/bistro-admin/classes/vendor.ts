@@ -2,6 +2,7 @@ import { User } from './user';
 import { Province } from './province';
 
 export class Vendor {
+    id: number;
     owner: User;
     name: string;
     description: string;
@@ -10,8 +11,9 @@ export class Vendor {
     phone: string;
     address: string;
     province: Province;
-    constructor(owner: User, name: string, description?: string, logo?: string,
+    constructor(id: number, owner: User, name: string, description?: string, logo?: string,
         email?: string, phone?: string, address?: string, province?: Province) {
+        this.id = id;
         this.owner = owner;
         this.name = name;
         this.description = (description ? description : "");
