@@ -1,0 +1,106 @@
+<ion-header>
+    <ba-header></ba-header>
+</ion-header>
+
+<ion-content>
+    <div class="ba-content">
+        <ba-title [title]="'Quản lý thương hiệu'"></ba-title>
+        <ba-buttons-function [showButton]="{buttonRemove: true, buttonCheck: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
+        <!-- <div class="ba-section" *ngIf="vendor">
+            <div class="section-header">
+            </div>
+            <div class="section-body">
+                <span class="vendor-image"> 
+                        <img src="{{vendor.logo}}" alt="vendor-image">
+                </span>
+                <h2 class="vendor-name">{{vendor.name}}</h2>
+                <p class="vendor-desc" [attr.contenteditable]="editable"></p>
+                <div class="form-group ba-form-group ba-flexbox">
+                    <label class="col-form-label bold">Chủ thương hiệu: </label>
+                    <input type="text" [attr.readonly]="editable ? null : ''" [class.form-control-plaintext]="!editable" [(ngModel)]="vendor.owner.name">
+
+                </div>
+                <div class="row">
+                    <div class="form-group ba-form-group col-md-6   no-margin-vertical">
+                        <label class=" col-form-label bold">Email:</label>
+                        <input type="text" [attr.readonly]="editable ? null : ''" [class.form-control-plaintext]="!editable" [(ngModel)]="vendor.email">
+                    </div>
+                    <div class="form-group ba-form-group  col-md-6 ba-flexbox no-margin-vertical">
+                        <label class=" col-form-label bold">Số điện thoại:</label>
+                        <input type="text" [attr.readonly]="editable ? null : ''" [class.form-control-plaintext]="!editable" [(ngModel)]="vendor.phone">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group ba-form-group  col-md-6  ba-flexbox no-margin-vertical">
+                        <label class=" col-form-label bold">Địa chỉ:</label>
+                        <input type="text" [attr.readonly]="editable ? null : ''" [class.form-control-plaintext]="!editable" [(ngModel)]="vendor.address">
+                    </div>
+                    <div class="form-group ba-form-group  col-md-6 ba-flexbox no-margin-vertical">
+                        <label class=" col-form-label bold">Tỉnh thành:</label>
+                        <input type="text" [attr.readonly]="editable ? null : ''" [class.form-control-plaintext]="!editable" [(ngModel)]="vendor.province.title">
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="ba-section" *ngIf="vendor">
+            <div class="form-group ba-form-group ba-avatar-upload">
+                <div class="avatar">
+                    <img src="{{vendor.logo || defaultLogo}}" alt="">
+                </div>
+                <div class="file-name">
+                    {{logoName}}
+                </div>
+                <div class="button-groups">
+                    <button class="btn" [ngClass]='{"btn-default": !vendor.logo, "btn-danger": vendor.logo}' (click)="removeLogo()">
+                        <i class="fa fa-times"></i>
+                    </button>
+                    <div class="upload-button">
+                        <label for="selectImageBtn" class="ba-link btn btn-primary"> 
+                            <i class="fa fa-file-image-o "></i> 
+                        </label>
+                        <input type="file" id="selectImageBtn" name="selectImageBtn" accept="image/*" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group ba-form-group">
+                <label for="vendor-name">Tên thương hiệu:</label>
+                <input type="text" name="vendor-name" [(ngModel)]="vendor.name" class="form-control">
+            </div>
+            <div class="form-group ba-form-group">
+                <label for="vendor-desc">Mô tả ngắn gọn:</label>
+                <textarea spellcheck="false" [(ngModel)]="vendor.description" spellcheck="false" class="form-control" name="vendor-desc" id="vendor-desc" value="vendor.description"> </textarea>
+            </div>
+            <div class="form-group ba-form-group">
+                <label for="owner-name">Chủ thương hiệu:</label>
+                <input type="text" name="owner-name" [(ngModel)]="user.name" class="form-control">
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group ba-form-group">
+                        <label for="vendor-email">Email:</label>
+                        <input type="text" name="vendor-email" class="form-control" [(ngModel)]="vendor.email">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group ba-form-group">
+                        <label for="vendor-phone">Điện thoại: </label>
+                        <input type="text" name="vendor-phone" class="form-control" [(ngModel)]="vendor.phone">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group ba-form-group">
+                <label for="vendor-address">Địa chỉ:</label>
+                <input type="text" name="vendor-address" [(ngModel)]="vendor.address" class="form-control">
+            </div>
+            <div class="form-group ba-form-group">
+                <label for="provinces">Tỉnh thành:</label>
+                <select name="provinces" id="provinces" class="form-control" [(ngModel)]="selectedProvince">
+                    <option class="dropdown-item" value="1">Hà Nội</option>
+                    <option class="dropdown-item" value="2">Thái Nguyên</option>
+                    <option class="dropdown-item" value="3">Đà Nẵng</option>
+                    <option class="dropdown-item" value="4">TP Hồ Chí Minh</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</ion-content>

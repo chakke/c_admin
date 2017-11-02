@@ -12,8 +12,7 @@ export class BaLoadingPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad BaLoadingPage');
+  ionViewDidLoad() { 
     this.registerChardDrawLabels();
     this.navCtrl.setRoot("BaLoginPage");
   }

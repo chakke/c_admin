@@ -1,0 +1,17 @@
+<div class="main-button-group">
+    <button class="btn btn-primary" *ngIf="showButton.buttonAdd" (click)="click('buttonAdd')">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+    </button>
+    <button class="btn btn-success" *ngIf="showButton.buttonEdit" (click)="click('buttonEdit')">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+    </button>
+    <button class="btn btn-danger" *ngIf="showButton.buttonDelete" (click)="click('buttonDelete')">
+        <i class="fa fa-trash-o" aria-hidden="true"></i>
+    </button>
+    <button class="btn btn-danger" *ngIf="showButton.buttonRemove" (click)="click('buttonRemove')">
+        <i class="fa fa-times" aria-hidden="true"></i>
+    </button>
+    <button class="btn btn-success" *ngIf="showButton.buttonCheck" (click)="click('buttonCheck')">
+        <i class="fa fa-check" aria-hidden="true"></i>
+    </button>
+</div>

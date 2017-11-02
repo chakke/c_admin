@@ -8,9 +8,11 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
+import { ComponentsModule } from '../components/ba-components/components.module';
 import { AppControllerProvider } from '../providers/bistro-admin/app-controller/app-controller';
 import { BistroHttpServiceProvider } from '../providers/bistro-admin/bistro-admin-http-service/bistro-admin-http-service';
 import { HttpService } from '../providers/http-service';
+import { ProgressControllerProvider } from '../providers/bistro-admin/progress-controller/progress-controller';
 
 @NgModule({
   declarations: [
@@ -20,6 +22,7 @@ import { HttpService } from '../providers/http-service';
     BrowserModule,
     FormsModule,
     HttpModule,
+    ComponentsModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -32,7 +35,8 @@ import { HttpService } from '../providers/http-service';
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     AppControllerProvider,
     BistroHttpServiceProvider,
-    HttpService
+    HttpService,
+    ProgressControllerProvider
   ]
 })
 export class AppModule { }

@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpService, ParamBuilder } from '../../http-service';
 import { ToastController, Toast } from 'ionic-angular';
-import { APIUrl, ResponseCode, ParamsKey } from '../app-constant'; 
-
+import { APIUrl, ResponseCode, ParamsKey } from '../app-constant';
+import 'rxjs/Rx';
 @Injectable()
 export class BistroHttpServiceProvider {
   serviceUrl = "http://125.212.192.94:8080/bistro_app/ws";
   toast: Toast = null;
   constructor(private httpService: HttpService, private toastCtrl: ToastController) {
-    console.log('Hello BistroHttpServiceProvider Provider');
   }
 
   requestGet(url: string, param: string) {
@@ -17,7 +16,7 @@ export class BistroHttpServiceProvider {
       if (error.status == 0) {
         if (!this.toast) {
           this.toast = this.toastCtrl.create({
-            message: "No internet connection!", 
+            message: "No internet connection!",
             position: "top"
           })
           this.toast.present();
@@ -37,7 +36,7 @@ export class BistroHttpServiceProvider {
       if (error.status == 0) {
         if (!this.toast) {
           this.toast = this.toastCtrl.create({
-            message: "No internet connection!", 
+            message: "No internet connection!",
             position: "top"
           })
           this.toast.present();
@@ -49,5 +48,5 @@ export class BistroHttpServiceProvider {
         }
       }
     });;
-  } 
+  }
 }

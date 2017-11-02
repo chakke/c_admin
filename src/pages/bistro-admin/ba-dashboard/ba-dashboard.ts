@@ -34,8 +34,7 @@ export class BaDashboardPage {
     ]
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad BaDashboardPage');
+  ionViewDidLoad() { 
     this.drawChart();
   }
 

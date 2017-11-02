@@ -119,6 +119,7 @@ ba-header {
     }
     @media(max-width: 576px) {
         .ba-header {
+            padding: 0 .5em;
             .header-main {
                 position: absolute;
                 left: $headerHeight;

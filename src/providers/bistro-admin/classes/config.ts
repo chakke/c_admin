@@ -30,8 +30,7 @@ export class Config {
     }
 
     getData(fields: Array<string>, data?: Object) {
-        let sourceData = data ? data : this.appData;
-        console.log(sourceData);
+        let sourceData = data ? data : this.appData; 
         if (fields.length == 0) return undefined;
         if (fields.length == 1) {
             if (sourceData && sourceData.hasOwnProperty(fields[0])) {

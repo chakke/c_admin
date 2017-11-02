@@ -2,15 +2,24 @@
     "version": "1.0",
     "menu-items": [{
             "icon": "<i class='fa fa-home' aria-hidden='true'></i>",
-            "title": "Dashboard"
+            "title": "Dashboard",
+            "page": "BaDashboardPage",
+            "link": "ba-dashboard",
+            "active": false
         },
         {
             "icon": "<i class='fa fa-suitcase' aria-hidden='true'></i>",
-            "title": "Thương hiệu"
+            "title": "Thương hiệu",
+            "page": "BaVendorPage",
+            "link": "ba-vendor",
+            "active": false
         },
         {
             "icon": "<i class='fa fa-building' aria-hidden='true'></i>",
-            "title": "Nhà hàng"
+            "title": "Nhà hàng",
+            "page": "BaRestaurantPage",
+            "link": "ba-restaurant",
+            "active": false
         },
         {
             "icon": "<i class='fa fa-male' aria-hidden='true'></i>",

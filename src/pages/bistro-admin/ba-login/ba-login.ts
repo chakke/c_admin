@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-
+import { AppControllerProvider } from '../../../providers/bistro-admin/app-controller/app-controller';
 @IonicPage()
 @Component({
   selector: 'page-ba-login',
@@ -14,11 +14,12 @@ export class BaLoginPage {
   loginForm: FormGroup;
   isSubmitted = false;
   phoneErrorMessage = "";
-  passwordErrorMessage = ""; 
+  passwordErrorMessage = "";
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public formBuilder: FormBuilder) {
+    public formBuilder: FormBuilder,
+    private appController: AppControllerProvider) {
     this.loginForm = this.formBuilder.group({
       phone: ['', Validators.compose([Validators.maxLength(20), Validators.minLength(8), Validators.required, Validators.pattern(/^\d+$/)])],
       password: ['', Validators.compose([Validators.minLength(6), Validators.required])]
@@ -27,9 +28,8 @@ export class BaLoginPage {
 
   login() {
     this.isSubmitted = true;
-    if (this.loginForm.valid) {
-      console.log("login");
-      this.navCtrl.setRoot("BaDashboardPage");
+    if (this.loginForm.valid) { 
+      this.appController.setRootPage("BaDashboardPage");
     } else {
       this.checkForm();
     }
@@ -51,11 +51,11 @@ export class BaLoginPage {
       } else {
         this.passwordErrorMessage = "Mật khẩu phải có độ dài tối thiểu 6 kí tự";
       }
-    }  
+    }
   }
 
   gotoRegister() {
-    this.navCtrl.push("BaRegisterPage");
+    this.navCtrl.setRoot("BaRegisterPage");
     if (this.navCtrl.length() > 1) {
       this.navCtrl.remove(1, this.navCtrl.length() - 1);
     }

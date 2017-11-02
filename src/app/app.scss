@@ -12,6 +12,11 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+@import url('https://fonts.googleapis.com/css?family=Montserrat|Open+Sans');
+* {
+    font-family: 'Montserrat', "Open Sans", sans-serif;
+}
+
 @-webkit-keyframes background {
     0% {
         background-position: 0% 50%
@@ -63,17 +68,112 @@
 
 .ba-content {
     padding: map-get($map: $BASizes, $key: defaultPadding);
+    padding-bottom: 4em;
     color: map-get($map: $BAColors, $key: black);
-    width: 100%;
-    min-height: 100%;
+    margin-left: map-get($map: $BASizes, $key: lineHeight)*1.5;
+    margin-right: map-get($map: $BASizes, $key: lineHeight)*1.5;
+    margin-top: map-get($map: $BASizes, $key: lineHeight);
+    margin-bottom: map-get($map: $BASizes, $key: lineHeight);
+    min-height: calc(100% - #{map-get($map: $BASizes, $key: lineHeight )}*2);
     background-color: map-get($map: $BAColors, $key: lightgray);
+    position: relative;
     .ba-main-title {
         text-transform: uppercase;
         padding-left: 15px;
+        font-weight: bold;
+    }
+    .main-button-group {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: map-get($map: $BASizes, $key: defaultPadding);
     }
 }
 
-$headerHeight: 3*map-get($map: $BASizes, $key: lineHeight);
+.bold {
+    font-weight: bold;
+}
+
+.ba-bold {
+    font-weight: 500;
+}
+
+.ba-padding {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.no-margin-vertical {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.ba-form-group {
+    label {
+        white-space: nowrap;
+        font-weight: bold;
+    }
+    .form-control {
+        font-size: 1em;
+    }
+    select.form-control:not([size]):not([multiple]) {
+        height: 2.25em;
+    }
+}
+
+.ck-editor__editable {
+    padding-top: 10px !important;
+    background-color: #FFF;
+}
+
+.ba-flexbox {
+    display: flex;
+}
+
+.ba-avatar-upload {
+    margin-top: 25px;
+    .avatar {
+        margin: 10px auto;
+        width: 200px;
+        min-height: 100px;
+        border: 1px solid #ddd;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        img {
+            width: 100%;
+            object-fit: contain;
+        }
+    }
+    .file-name {
+        width: 100%;
+        text-align: center;
+        padding: 10px 5px;
+    }
+    .button-groups {
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .btn,
+        button {
+            margin: 0 5px;
+        }
+        .upload-button {
+            display: inline-block;
+            input {
+                display: none;
+            }
+            label {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+$headerHeight: 3 * map-get($map: $BASizes,
+$key: lineHeight);
 .ba-menu {
     color: map-get($map: $BAColors, $key: white);
     .ba-menu-header {
@@ -91,6 +191,12 @@ $headerHeight: 3*map-get($map: $BASizes, $key: lineHeight);
             font-size: 1em;
             color: map-get($map: $BAColors, $key: white);
             display: flex;
+            &.active,
+            &:hover {
+                background-color: #98262e;
+                border-left: solid 6px map-get($BAColors, yellow);
+                font-weight: bold;
+            }
             .icon {
                 width: 2 * map-get($map: $BASizes, $key: lineHeight);
                 height: 100%;
@@ -253,4 +359,23 @@ $headerHeight: 3*map-get($map: $BASizes, $key: lineHeight);
 @media(min-width: 576px) {}
 
 //Style for only mobile
-@media(max-width: 576px) {}
+@media(max-width: 576px) {
+    .ba-content {
+        margin: 0;
+    }
+}
+
+//Style for tablet and below
+@media (max-width: 768px) {
+    .ba-flexbox {
+        flex-wrap: wrap;
+    }
+    .ba-content {
+        .main-button-group {
+            position: relative;
+            text-align: right;
+            padding-right: 0;
+            padding-left: 0;
+        }
+    }
+}

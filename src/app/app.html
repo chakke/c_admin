@@ -1,11 +1,11 @@
-<ion-menu class="ba-menu" [content]="content">
+<ion-menu class="ba-menu" [content]="nav">
     <ion-header class="ba-menu-header">
         <span class="vendor">
                 Bistro
         </span>
     </ion-header>
     <ion-content class="ba-menu-content">
-        <div class="ba-menu-item" *ngFor="let item of menuItems">
+        <div class="ba-menu-item ba-pointer" [class.active]="item.active" *ngFor="let item of menuItems" (click)="gotoMenu(item)">
             <span class="icon" [innerHTML]="item.icon">                
             </span>
             <span class="title">
@@ -14,4 +14,5 @@
         </div>
     </ion-content>
 </ion-menu>
-<ion-nav #content [root]="rootPage"></ion-nav>
+<ba-progress></ba-progress>
+<ion-nav #nav [root]="rootPage"></ion-nav>

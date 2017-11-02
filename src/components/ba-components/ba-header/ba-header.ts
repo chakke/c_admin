@@ -13,12 +13,10 @@ export class BaHeaderComponent {
   @ViewChild("searchButton") searchButton: ElementRef;
   @ViewChild("searchInput") searchInput: ElementRef;
   @ViewChild("searchBar") searchBar: ElementRef;
-  constructor() {
-    console.log('Hello BaHeaderComponent Component');
+  constructor() { 
   }
 
-  ngAfterViewInit() {
-    console.log(this.searchButton, this.searchInput)
+  ngAfterViewInit() { 
     if (this.searchButton && this.searchInput) {
       this.searchButton.nativeElement.addEventListener('click', () => { 
         this.toggleSearch();

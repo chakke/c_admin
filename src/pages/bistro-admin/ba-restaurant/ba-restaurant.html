@@ -1,0 +1,11 @@
+<ion-header>
+    <ba-header></ba-header>
+</ion-header>
+
+
+<ion-content>
+    <div class="ba-content">
+        <ba-title [title]="'Quản lý nhà hàng'"></ba-title>
+        <ba-buttons-function [showButton]="{buttonAdd: true, buttonDelete: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
+    </div>
+</ion-content>

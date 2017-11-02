@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
-import { BaRegisterPage } from './ba-register';
+import { BaVendorPage } from './ba-vendor';
 import { ComponentsModule } from '../../../components/ba-components/components.module';
 
 @NgModule({
   declarations: [
-    BaRegisterPage,
+    BaVendorPage,
   ],
   imports: [
-    IonicPageModule.forChild(BaRegisterPage),
+    IonicPageModule.forChild(BaVendorPage),
     ComponentsModule
   ],
 })
-export class BaRegisterPageModule {}
+export class BaVendorPageModule { }

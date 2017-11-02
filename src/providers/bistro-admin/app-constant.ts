@@ -1,5 +1,6 @@
 export class AssetsUrl {
     public static CONFIG: string = "assets/bistro-admin/data/app-config.json";
+    public static DEFAULT_LOGO = "http://cooperslegacyfoundation.org/uploads/3/5/1/7/35179490/9834323_orig.png";
 }
 export class APIUrl { 
 }
