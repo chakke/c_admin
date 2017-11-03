@@ -4,7 +4,7 @@
           <i class="fa fa-bars" aria-hidden="true"></i>
       </span>
     </div>
-    <div class="header-main">
+    <div class="header-main" #headerMain>
         <div class="search-bar" *ngIf="showSearchBar" #searchBar>
             <span class="search-button ba-pointer" #searchButton>
                 <i class="fa fa-search search" aria-hidden="true"></i>
@@ -14,19 +14,80 @@
         </div>
     </div>
     <div class="header-right">
-        <span class="message header-button ba-pointer">
-          <i class="fa fa-envelope-o" aria-hidden="true"></i>
-          <span class="bagde">3</span>
-          <div class="overlay-content">
-              Hello. Its me.
-          </div>
-        </span>
-        <span class="notification header-button ba-pointer">
-          <i class="fa fa-bell" aria-hidden="true"></i>
-          <span class="bagde">5</span>
-        </span>
-        <span class="avatar ba-pointer">
-          <img src="https://cdn.pixabay.com/photo/2016/08/20/05/38/avatar-1606916_960_720.png" alt="">
-        </span>
+        <div [class.active]="showOverlay=='inbox'" class="message header-button ba-pointer" (click)="toggleActive('inbox')">
+            <div class="button-content">
+                <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                <span class="bagde">3</span>
+            </div>
+            <div class="overlay-content" (click)="onOverlayClick()">
+                <div class="overlay-header">
+                    <span>Bạn có 3 tin nhắn mới</span>
+                </div>
+                <div class="overlay-body">
+                    <div class="overlay-item">
+                        <span>Khách hàng đặt hàng qua điện thoại</span>
+                    </div>
+                    <div class="overlay-item">
+                        <span>Khách hàng gửi phản hồi</span>
+                    </div>
+                    <div class="overlay-item">
+                        <span>Nhập xuất lô hàng mới</span>
+                    </div>
+                    <div class="overlay-item">
+                        <span>Doanh thu tăng đột biến</span>
+                    </div>
+                    <div class="overlay-item">
+                        <span>Nhà bếp quá tải</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div [class.active]="showOverlay=='notification'" class="notification header-button ba-pointer" (click)="toggleActive('notification')">
+            <div class="button-content">
+                <i class="fa fa-bell" aria-hidden="true"></i>
+                <span class="bagde">5</span>
+            </div>
+            <div class="overlay-content" (click)="onOverlayClick()">
+                <div class="overlay-header">
+                    <span>Bạn có 5 thông báo mới</span>
+                </div>
+                <div class="overlay-body">
+                    <div class="overlay-item">
+                        <span>Khách hàng đặt hàng qua điện thoại</span>
+                    </div>
+                    <div class="overlay-item">
+                        <span>Khách hàng gửi phản hồi</span>
+                    </div>
+                    <div class="overlay-item">
+                        <span>Nhập xuất lô hàng mới</span>
+                    </div>
+                    <div class="overlay-item">
+                        <span>Doanh thu tăng đột biến</span>
+                    </div>
+                    <div class="overlay-item">
+                        <span>Nhà bếp quá tải</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div [class.active]="showOverlay=='avatar'" class="avatar ba-pointer" (click)="toggleActive('avatar')">
+            <img src="assets/bistro-admin/images/avatar-placeholder.png" alt="Avatar">
+            <div class="overlay-content" (click)="onOverlayClick()">
+                <div class="overlay-header">
+                    <span>Tài khoản</span>
+                </div>
+                <div class="overlay-body">
+                    <div class="overlay-item">
+                        <span>Thông tin tài khoản</span>
+                    </div>
+                    <div class="overlay-item">
+                        <span>Đổi mật khẩu</span>
+                    </div>
+                </div>
+                <div class="overlay-footer" (click)="logOut()">
+                    <span class="btn-logout ba-pointer">Đăng xuất</span>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

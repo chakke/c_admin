@@ -90,7 +90,7 @@
     }
 }
 
-.ba-section{
+.ba-section {
     margin: 15px 0;
 }
 
@@ -130,13 +130,19 @@
     background-color: #FFF;
 }
 
-.table{
-    .btn{
+.table {
+    .btn {
         margin-bottom: 5px;
     }
-    img{
+    img {
         max-width: 100px;
     }
+}
+
+.flexbox-center-cross {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .ba-flexbox {

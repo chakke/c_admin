@@ -6,42 +6,6 @@
     <div class="ba-content">
         <ba-title [title]="'Quản lý thương hiệu'"></ba-title>
         <ba-buttons-function [showButton]="{buttonRemove: true, buttonCheck: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
-        <!-- <div class="ba-section" *ngIf="vendor">
-            <div class="section-header">
-            </div>
-            <div class="section-body">
-                <span class="vendor-image"> 
-                        <img src="{{vendor.logo}}" alt="vendor-image">
-                </span>
-                <h2 class="vendor-name">{{vendor.name}}</h2>
-                <p class="vendor-desc" [attr.contenteditable]="editable"></p>
-                <div class="form-group ba-form-group ba-flexbox">
-                    <label class="col-form-label bold">Chủ thương hiệu: </label>
-                    <input type="text" [attr.readonly]="editable ? null : ''" [class.form-control-plaintext]="!editable" [(ngModel)]="vendor.owner.name">
-
-                </div>
-                <div class="row">
-                    <div class="form-group ba-form-group col-md-6   no-margin-vertical">
-                        <label class=" col-form-label bold">Email:</label>
-                        <input type="text" [attr.readonly]="editable ? null : ''" [class.form-control-plaintext]="!editable" [(ngModel)]="vendor.email">
-                    </div>
-                    <div class="form-group ba-form-group  col-md-6 ba-flexbox no-margin-vertical">
-                        <label class=" col-form-label bold">Số điện thoại:</label>
-                        <input type="text" [attr.readonly]="editable ? null : ''" [class.form-control-plaintext]="!editable" [(ngModel)]="vendor.phone">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group ba-form-group  col-md-6  ba-flexbox no-margin-vertical">
-                        <label class=" col-form-label bold">Địa chỉ:</label>
-                        <input type="text" [attr.readonly]="editable ? null : ''" [class.form-control-plaintext]="!editable" [(ngModel)]="vendor.address">
-                    </div>
-                    <div class="form-group ba-form-group  col-md-6 ba-flexbox no-margin-vertical">
-                        <label class=" col-form-label bold">Tỉnh thành:</label>
-                        <input type="text" [attr.readonly]="editable ? null : ''" [class.form-control-plaintext]="!editable" [(ngModel)]="vendor.province.title">
-                    </div>
-                </div>
-            </div>
-        </div> -->
         <div class="ba-section" *ngIf="vendor">
             <div class="form-group ba-form-group ba-avatar-upload">
                 <div class="avatar">

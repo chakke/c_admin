@@ -55,7 +55,7 @@ export class BistroHttpServiceProvider {
 
   //Lấy danh sách các tỉnh trong cả nước
   getProvince() {
-    if (this.isUseFakeData) return this.requestGet(AssetsUrl.BASE_URL + FakeAPIUrl.PROVINCE,"");
+    if (this.isUseFakeData) return this.requestGet(AssetsUrl.BASE_URL + FakeAPIUrl.PROVINCE, "");
     return this.requestGet(this.serviceUrl + APIUrl.PROVINCE, "");
   }
 
@@ -114,7 +114,7 @@ export class BistroHttpServiceProvider {
 
   //Lay danh sach nha hang
   getRestaurantByVendor(vendorId: number, city?: string, keyword?: string) {
-    if (this.isUseFakeData) return this.requestGet(AssetsUrl.BASE_URL + FakeAPIUrl.RESTAURANT_LIVE_QUERY,"");
+    if (this.isUseFakeData) return this.requestGet(AssetsUrl.BASE_URL + FakeAPIUrl.RESTAURANT_LIVE_QUERY, "");
     return this.requestGet(this.serviceUrl + APIUrl.RESTAURANT_LIVE_QUERY, ParamBuilder.builder()
       .add(ParamsKey.VENDOR_ID, vendorId)
       .addIgnoreNull(ParamsKey.CITY, city)
@@ -141,6 +141,29 @@ export class BistroHttpServiceProvider {
 
   // Lay thong tin chi tiet cua nha hang
   getRestaurantDetail(restId: number) {
+    if (this.isUseFakeData) {
+      return new Promise((resolve, reject) => {
+        this.requestGet(AssetsUrl.BASE_URL + FakeAPIUrl.RESTAURANT_DETAIL, "").then(data => {
+          if (data && data.content) {
+            let restaurants = data.content;
+            let index = restaurants.findIndex(elm => {
+              return elm.rest_id == restId;
+            })
+            if (index > -1) {
+              let restaurant = restaurants[index];
+              resolve({
+                "result": 1,
+                "content": restaurant
+              })
+            } else {
+              resolve(null);
+            }
+          } else {
+            reject();
+          }
+        });
+      })
+    }
     return this.requestGet(this.serviceUrl + APIUrl.RESTAURANT_DETAIL, ParamBuilder.builder()
       .add(ParamsKey.REST_ID, restId)
       .add(ParamsKey.SIGN, Md5.hashStr(restId + APIUrl.CLIENT_KEY))

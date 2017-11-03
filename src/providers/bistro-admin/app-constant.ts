@@ -7,6 +7,7 @@ export class AssetsUrl {
 export class FakeAPIUrl {
     public static PROVINCE: string = "/data/province.json";
     public static RESTAURANT_LIVE_QUERY: string = "/data/restaurant.json";
+    public static RESTAURANT_DETAIL: string = "/data/restaurant-detail.json";
 }
 
 export class APIUrl {
@@ -55,4 +56,12 @@ export class ParamsKey {
 export class ResponseCode {
     public static ERROR_CODE: number = 0;
     public static SUCCESS_CODE: number = 1;
+}
+
+export class FunctionButtonName {
+    public static BUTTON_ADD: string = "buttonAdd";
+    public static BUTTON_EDIT: string = "buttonEdit";
+    public static BUTTON_DELETE: string = "buttonDelete";
+    public static BUTTON_REMOVE: string = "buttonRemove";
+    public static BUTTON_CHECK: string = "buttonCheck";
 }

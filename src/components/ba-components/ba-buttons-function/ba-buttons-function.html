@@ -1,17 +1,17 @@
 <div class="main-button-group">
-    <button class="btn btn-primary" *ngIf="showButton.buttonAdd" (click)="click('buttonAdd')">
+    <button class="btn btn-primary" *ngIf="showButton.buttonAdd" (click)="click(buttonName.BUTTON_ADD)">
         <i class="fa fa-plus" aria-hidden="true"></i>
     </button>
-    <button class="btn btn-success" *ngIf="showButton.buttonEdit" (click)="click('buttonEdit')">
+    <button class="btn btn-success" *ngIf="showButton.buttonEdit" (click)="click(buttonName.BUTTON_EDIT)">
         <i class="fa fa-pencil" aria-hidden="true"></i>
     </button>
-    <button class="btn btn-danger" *ngIf="showButton.buttonDelete" (click)="click('buttonDelete')">
+    <button class="btn btn-danger" *ngIf="showButton.buttonDelete" (click)="click(buttonName.BUTTON_DELETE)">
         <i class="fa fa-trash-o" aria-hidden="true"></i>
     </button>
-    <button class="btn btn-danger" *ngIf="showButton.buttonRemove" (click)="click('buttonRemove')">
+    <button class="btn btn-danger" *ngIf="showButton.buttonRemove" (click)="click(buttonName.BUTTON_REMOVE)">
         <i class="fa fa-times" aria-hidden="true"></i>
     </button>
-    <button class="btn btn-success" *ngIf="showButton.buttonCheck" (click)="click('buttonCheck')">
+    <button class="btn btn-success" *ngIf="showButton.buttonCheck" (click)="click(buttonName.BUTTON_CHECK)">
         <i class="fa fa-check" aria-hidden="true"></i>
     </button>
 </div>

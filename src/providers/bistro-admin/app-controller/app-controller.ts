@@ -8,6 +8,7 @@ import { BistroHttpServiceProvider } from '../bistro-admin-http-service/bistro-a
 import { ResourceLoader } from '../../resource-loader/resource-loader';
 import { RestaurantControllerProvider } from '../restaurant-controller/restaurant-controller';
 import { ProvinceControllerProvider } from '../province-controller/province-controller';
+import { Restaurant } from '../classes/restaurant';
 
 import { Config } from '../classes/config';
 import { AssetsUrl } from '../app-constant';
@@ -147,6 +148,20 @@ export class AppControllerProvider {
       if (data && data.content)
         this.restaurantController.updateData(data.content, this.vendor, this.user);
     })
+  }
+
+  getRestauranById(id: number): Promise<Restaurant> {
+    return new Promise((resolve, reject) => {
+      this.httpService.getRestaurantDetail(id).then(data => {
+        if (data && data.content) {
+          resolve(this.restaurantController.getRestaurantFromData(data.content))
+        }
+        else {
+          reject();
+        }
+      })
+    })
+
   }
 
   getRestauranController() {

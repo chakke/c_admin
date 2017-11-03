@@ -16,6 +16,7 @@ export class Restaurant {
     phone: string;
     latLng: LatLng;
     offerDelivery: number;
+    offerCollection: number;
     deliveryTime: number;
     option: string;
     image: string;
@@ -34,6 +35,7 @@ export class Restaurant {
         phone?: string,
         latLng?: LatLng,
         offerDelivery?: number,
+        offerCollection?: number,
         deliveryTime?: number,
         option?: string,
         image?: string,
@@ -51,6 +53,7 @@ export class Restaurant {
         this.phone = phone ? phone : "";
         this.latLng = latLng ? latLng : new LatLng(0, 0);
         this.offerDelivery = offerDelivery ? offerDelivery : 0;
+        this.offerCollection = offerCollection ? offerCollection : 0;
         this.deliveryTime = deliveryTime ? deliveryTime : 15;
         this.option = option ? option : "";
         this.image = image ? image : "";
