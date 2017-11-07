@@ -70,5 +70,6 @@ export class BaVendorPage {
 
   functionButtonClick(button) {
     console.log("functionButtonClick", button);
+    this.appController.setRootPage("BaDashboardPage");
   }
 }

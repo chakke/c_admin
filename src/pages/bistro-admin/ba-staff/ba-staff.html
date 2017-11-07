@@ -2,11 +2,16 @@
     <ba-header></ba-header>
 </ion-header>
 
-
 <ion-content>
     <div class="ba-content">
-        <ba-title [title]="'Quản lý nhà hàng'"></ba-title>
+        <ba-title [title]="'Quản lý nhân viên'"></ba-title>
         <div class="main-controls">
+            <select name="provinces" id="provinces" class="form-control ba-filter">
+                <option class="dropdown-item" selected="true" value="1">Chọn cửa hàng</option>
+                <option class="dropdown-item" value="2">Bistro</option>
+                <option class="dropdown-item" value="3">Dancer</option>
+                <option class="dropdown-item" value="4">B8</option>
+            </select>
             <ba-buttons-function [showButton]="{buttonAdd: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
         </div>
         <div class="ba-section">
@@ -15,12 +20,10 @@
                     <table class="table">
                         <tr>
                             <th text-center>STT</th>
-                            <th>Tên nhà hàng</th>
+                            <th>Tên nhân viên</th>
                             <th>Email</th>
-                            <th>Thành phố</th>
-                            <th>Logo</th>
+                            <th>Chức vụ</th>
                             <th>Trạng Thái</th>
-                            <th>Tác vụ</th>
                         </tr>
                         <tr *ngFor="let restaurant of restaurants; let i = index">
                             <td text-center>{{i+1}}</td>
@@ -33,11 +36,11 @@
                             <td>Hoạt động</td>
                             <td>
                                 <button class="btn btn-success" (click)="gotoRestaurantDetail(restaurant.id)">
-                                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                                </button>
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </button>
                                 <button class="btn btn-danger" (click)="delete(restaurant)">
-                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                </button>
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
                             </td>
                         </tr>
                     </table>
@@ -47,21 +50,21 @@
                 <ul class="pagination pagination-lg">
                     <li class="page-item disabled">
                         <span class="page-link">
-                            <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                        </span>
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                    </span>
                     </li>
                     <li class="page-item"><span class="page-link" href="#">1</span></li>
                     <li class="page-item active">
                         <span class="page-link">
-                                2
-                                <span class="sr-only">(current)</span>
+                            2
+                            <span class="sr-only">(current)</span>
                         </span>
                     </li>
                     <li class="page-item"><span class="page-link" href="#">3</span></li>
                     <li class="page-item">
                         <span class="page-link" href="#">
-                            <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                        </span>
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </span>
                     </li>
                 </ul>
             </div>

@@ -15,6 +15,7 @@ import { HttpService } from '../providers/http-service';
 import { ProgressControllerProvider } from '../providers/bistro-admin/progress-controller/progress-controller';
 import { RestaurantControllerProvider } from '../providers/bistro-admin/restaurant-controller/restaurant-controller';
 import { ProvinceControllerProvider } from '../providers/bistro-admin/province-controller/province-controller';
+import { StaffControllerProvider } from '../providers/bistro-admin/staff-controller/staff-controller';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { ProvinceControllerProvider } from '../providers/bistro-admin/province-c
     HttpService,
     ProgressControllerProvider,
     RestaurantControllerProvider,
-    ProvinceControllerProvider
+    ProvinceControllerProvider,
+    StaffControllerProvider
   ]
 })
 export class AppModule { }

@@ -23,7 +23,10 @@
         },
         {
             "icon": "<i class='fa fa-male' aria-hidden='true'></i>",
-            "title": "Nhân viên"
+            "title": "Nhân viên",
+            "page": "BaStaffPage",
+            "link": "ba-staff",
+            "active": false
         },
         {
             "icon": "<i class='fa fa-user' aria-hidden='true'></i>",

@@ -23,6 +23,7 @@ export class BaRestaurantDetailPage {
   }
 
   ionViewDidLoad() {
+
     if (this.navParams.get("id")) {
       this.appController.getRestauranById(this.navParams.get("id")).then(restaurant => {
         this.restaurant = restaurant;
@@ -36,6 +37,9 @@ export class BaRestaurantDetailPage {
           }
         }
       });
+    }
+    else { 
+      this.restaurant = new Restaurant(0,this.appController.getVendor(),"","");
     }
   }
 
@@ -70,6 +74,7 @@ export class BaRestaurantDetailPage {
 
   functionButtonClick(button) {
     console.log("button click", button);
+    this.appController.setRootPage("BaRestaurantPage");
   }
 
 }

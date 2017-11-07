@@ -5,7 +5,9 @@
 <ion-content>
     <div class="ba-content">
         <ba-title [title]="'Quản lý thương hiệu'"></ba-title>
-        <ba-buttons-function [showButton]="{buttonRemove: true, buttonCheck: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
+        <div class="main-controls">
+            <ba-buttons-function [showButton]="{buttonRemove: true, buttonCheck: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
+        </div>
         <div class="ba-section" *ngIf="vendor">
             <div class="form-group ba-form-group ba-avatar-upload">
                 <div class="avatar">
