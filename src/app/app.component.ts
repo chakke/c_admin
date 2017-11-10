@@ -9,7 +9,7 @@ import { AppControllerProvider } from '../providers/bistro-admin/app-controller/
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = "BaLoadingPage";
+  rootPage: any = "RestaurantMapMakerPage";
   menuItems = [];
   startUpPage = ["BaLoadingPage", "BaLoginPage", "BaRegisterPage"];
 
