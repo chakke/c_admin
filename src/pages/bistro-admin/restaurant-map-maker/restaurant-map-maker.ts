@@ -4,6 +4,11 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 import * as interact from "interactjs";
 import { UIComponent } from '../../../providers/bistro-admin/classes/ui-component';
 import { ComponentFactory } from '../../../providers/bistro-admin/component-factory/component-factory';
+import { IComponentType } from "../../../providers/bistro-admin/interface/i-component-type";
+import { Floor } from "../../../providers/bistro-admin/classes/floor";
+import { ComponentType } from "../../../providers/bistro-admin/app-constant";
+import { Utils } from "../../../providers/app-utils";
+
 @IonicPage()
 @Component({
   selector: 'page-restaurant-map-maker',
@@ -12,51 +17,28 @@ import { ComponentFactory } from '../../../providers/bistro-admin/component-fact
 export class RestaurantMapMakerPage {
   isElementIn = false;
   mapZone: HTMLElement;
-  componentFactory: ComponentFactory;
-  componentTypes = [
-    {
-      title: "Khu vực",
-      type: "area"
-    },
-    {
-      title: "Bàn",
-      type: "table"
-    },
-    {
-      title: "Cửa",
-      type: "door"
-    },
-    {
-      title: "Nhà vệ sinh",
-      type: "wc"
-    },
-    {
-      title: "Bếp",
-      type: "kitchen"
-    },
-    {
-      title: "Quầy bar",
-      type: "bar"
-    },
-    {
-      title: "Thu ngân",
-      type: "receptionist"
-    },
-    {
-      title: "Cầu thang",
-      type: "stair"
-    },
-    {
-      title: "Khu vực cấm",
-      type: "restrict"
-    },
-  ]
+  componentTypes: Array<IComponentType> = [];
 
-  components: Array<UIComponent> = [];
+  selectedFloor: Floor;
   selectedComponent: UIComponent;
+  defaultWidth = 50;
+  defaultHeight = 50;
+
   constructor(public navCtrl: NavController, public domSanitizer: DomSanitizer,
     public navParams: NavParams, public alertCtrl: AlertController, public changeDetectorRef: ChangeDetectorRef) {
-    this.componentFactory = new ComponentFactory();
+    this.componentTypes = [
+      ComponentType.AREA,
+      ComponentType.TABLE,
+      ComponentType.DOOR,
+      ComponentType.WC,
+      ComponentType.KITCHEN,
+      ComponentType.BAR,
+      ComponentType.RECEPTIONIST,
+      ComponentType.STAIR,
+      ComponentType.RESTRICT
+    ]
+    this.selectedFloor = new Floor();
+
   }
 
   ionViewDidLoad() {
@@ -99,8 +81,7 @@ export class RestaurantMapMakerPage {
         },
 
         // call this function on every dragend event
-        onend: (event) => {
-          console.log("onend");
+        onend: (event) => { 
           let target = event.target;
           target.style.webkitTransform =
             target.style.transform = null;
@@ -147,13 +128,11 @@ export class RestaurantMapMakerPage {
           let y = relateElement.offsetTop + parseFloat(relateElement.getAttribute('data-y')) - targetElement.offsetTop;
           if (x < 0) x = 0;
           if (y < 0) y = 0;
-          let component = event.relatedTarget.getAttribute("component");
-          let uiComponent = this.componentFactory.getComponent(component, "", x, y);
+          let type = event.relatedTarget.getAttribute("component");
 
-          this.components.push(uiComponent);
+          this.selectedFloor.addComponent(type, null, x, y);
 
           event.target.classList.remove('dragg-entered');
-          console.log("ondrop component", this.components, uiComponent);
           this.changeDetectorRef.detectChanges();
         },
 
@@ -176,8 +155,8 @@ export class RestaurantMapMakerPage {
         onmove: (event) => {
           let target = event.target;
           let index = target.getAttribute('index');
-          if (index && this.components[index]) {
-            let component = this.components[index];
+          if (index && this.selectedFloor.components[index]) {
+            let component = this.selectedFloor.components[index];
             this.addElementToArray("dragging", component.classList);
             component.x += event.dx;
             component.y += event.dy;
@@ -188,8 +167,8 @@ export class RestaurantMapMakerPage {
         onend: (event) => {
           let target = event.target;
           let index = target.getAttribute('index');
-          if (index && this.components[index]) {
-            let component = this.components[index];
+          if (index && this.selectedFloor.components[index]) {
+            let component = this.selectedFloor.components[index];
             this.removeElementFromArray("dragging", component.classList);
             this.mapZone.classList.remove("dragging");
           }
@@ -207,8 +186,8 @@ export class RestaurantMapMakerPage {
       .on('resizemove', (event) => {
         let target = event.target;
         let index = target.getAttribute('index');
-        if (index && this.components[index]) {
-          let component = this.components[index];
+        if (index && this.selectedFloor.components[index]) {
+          let component = this.selectedFloor.components[index];
           this.addElementToArray("dragging", component.classList);
           component.x += event.deltaRect.left;
           component.y += event.deltaRect.top;
@@ -218,12 +197,11 @@ export class RestaurantMapMakerPage {
         }
         this.changeDetectorRef.detectChanges();
       })
-      .on('resizeend', (event) => {
-        console.log("resizeend")
+      .on('resizeend', (event) => { 
         let target = event.target;
         let index = target.getAttribute('index');
-        if (index && this.components[index]) {
-          let component = this.components[index];
+        if (index && this.selectedFloor.components[index]) {
+          let component = this.selectedFloor.components[index];
           this.removeElementFromArray("dragging", component.classList);
           this.mapZone.classList.remove("dragging");
         }
@@ -235,16 +213,14 @@ export class RestaurantMapMakerPage {
     let index = array.indexOf(element);
     if (index == -1) {
       array.push(element);
-    }
-    console.log("add", array);
+    } 
   }
 
   removeElementFromArray(element: string, array: Array<string>) {
     let index = array.indexOf(element);
     if (index > -1) {
       array.splice(index, 1);
-    }
-    console.log("remove", element, array);
+    } 
   }
 
   selectComponent(component: UIComponent) {
@@ -270,11 +246,11 @@ export class RestaurantMapMakerPage {
       }, {
         text: "OK",
         handler: () => {
-          let index = this.components.findIndex(elm => {
+          let index = this.selectedFloor.components.findIndex(elm => {
             return elm.id == this.selectedComponent.id;
           });
           if (index > -1) {
-            this.components.splice(index, 1);
+            this.selectedFloor.components.splice(index, 1);
             this.selectedComponent = null;
           }
         }
@@ -306,7 +282,7 @@ export class RestaurantMapMakerPage {
       }, {
         text: "OK",
         handler: (event) => {
-          let index = this.components.findIndex(elm => {
+          let index = this.selectedFloor.components.findIndex(elm => {
             return elm.id == this.selectedComponent.id;
           });
           if (index > -1 && event) {
@@ -318,4 +294,122 @@ export class RestaurantMapMakerPage {
     })
     alert.present();
   }
+
+  copy() {
+    let alert = this.alertCtrl.create({
+      title: "Sao chép " + (this.selectComponent.name ? this.selectedComponent.title : this.selectedComponent.type.name),
+      inputs: [{
+        name: "quantily",
+        placeholder: "Số lượng (1)",
+        type: "number",
+        value: ""
+      }],
+      buttons: [{
+        text: "Hủy",
+        role: "cancel"
+      }, {
+        text: "OK",
+        handler: (data) => {
+          if (data) {
+            let quantity = +data["quantily"];
+            let name = data["name"];
+
+            if (!Utils.isNumeric(quantity)) {
+              quantity = 0;
+            }
+            if (quantity < 0) quantity = 0;
+            if (quantity > 20) quantity = 20;
+            this.addMulticomponent(quantity, this.selectedComponent.type.type, (this.selectedComponent.title ? this.selectedComponent.title : undefined),
+              this.selectedComponent.width, this.selectedComponent.height); 
+
+          }
+        }
+      }]
+    });
+    alert.present();
+  }
+
+  addButtonClick(type) {
+    let alert = this.alertCtrl.create({
+      title: " Thêm mới " + type.name,
+      inputs: [{
+        name: "quantily",
+        placeholder: "Số lượng (1)",
+        type: "number",
+        value: ""
+      },
+      {
+        name: "name",
+        placeholder: "Tiêu đề (" + type.name + ")",
+        value: ""
+      },
+      {
+        name: "width",
+        placeholder: "Chiều dài (" + this.defaultWidth + ")",
+        type: "number",
+        value: ""
+      },
+      {
+        name: "height",
+        placeholder: "Chiều cao (" + this.defaultHeight + ")",
+        type: "number",
+        value: ""
+      }],
+      buttons: [{
+        text: "Hủy",
+        role: "cancel"
+      }, {
+        text: "OK",
+        handler: (data) => { 
+          if (data) {
+            let quantity = +data["quantily"];
+            let name = data["name"];
+            let width = data["width"];
+            let height = data["height"]; 
+            quantity = this.validateNumber(quantity, 1, 1, 20);
+            width = this.validateNumber(width, this.defaultWidth, 5, 200);
+            height = this.validateNumber(height, this.defaultHeight, 5, 200); 
+            if (!name) {
+              name = undefined;
+            }
+            this.addMulticomponent(quantity, type.type, name, width, height);
+          }
+        }
+      }]
+    });
+    alert.present();
+  }
+
+  addMulticomponent(quantity: number, type: string, title?: string, width?: number, height?: number) {
+    let x = 0;
+    let y = 0;
+    let j = 0;
+    let delta = 5;
+    for (let i = 0; i < quantity; i++) {
+      if ((x + j * delta + this.defaultWidth) > this.mapZone.clientWidth) {
+        x += delta;
+        j = 0;
+      }
+      if ((y + j * delta + this.defaultHeight) > this.mapZone.clientHeight) {
+        y += delta;
+        j = 0;
+      }
+      this.selectedFloor.addComponent(type, title, x + j * delta, y + j * delta, width, height);
+      j++;
+    }
+  }
+
+  validateNumber(input: any, defaultValue: number, min: number, max: number) {
+    if (!input || !Utils.isNumeric(+input)) {
+      input = defaultValue;
+    } 
+    if (input < min) input = min;
+    if (input > max) input = max;
+    return input;
+  }
+
+  buttonFabClick(){
+    
+  }
+
 }

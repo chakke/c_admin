@@ -6,9 +6,14 @@
     <div class="ba-content">
         <ba-title [title]="'Sơ đồ nhà hàng'"></ba-title>
         <div class="restaurant-map">
-            <div class="left-side-bar col-md-3 col-sm-3">
+            <div class="left-side-bar col-md-3 col-sm-12">
                 <ul class="list-group component-list">
-                    <li class="list-group-item component-type" *ngFor="let componentType of componentTypes" [attr.component]="componentType.type">{{componentType.title}}</li>
+                    <li class="list-group-item component-type" *ngFor="let componentType of componentTypes" [attr.component]="componentType.type">
+                        {{componentType.name}}
+                        <span class="btn btn-primary float-right" (click)="addButtonClick(componentType)">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </span>
+                    </li>
                 </ul>
                 <div class="action-buttons" *ngIf="selectedComponent">
                     <button class="btn btn-success" (click)="edit()">
@@ -20,8 +25,11 @@
                     <button class="btn btn-warning" (click)="upIndex()">
                         <i class="fa fa-long-arrow-up" aria-hidden="true"></i>
                     </button>
-                    <button class="btn btn-info" (click)="downIndex()">
+                    <button class="btn btn-dark" (click)="downIndex()">
                         <i class="fa fa-long-arrow-down" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn btn-info" (click)="copy()">
+                        <i class="fa fa-copy" aria-hidden="true"></i>
                     </button>
                     <button class="btn btn-danger" (click)="delete()">
                         <i class="fa fa-times" aria-hidden="true"></i>
@@ -46,12 +54,14 @@
                     </ion-list>
                 </div>
             </div>
-            <div class="right-side-bar col-md-9 col-sm-9" id="map-zone">
-                <div [ngClass]="component.classList" *ngFor="let component of components; let i = index" [attr.index]="i" [style.transform]="domSanitizer.bypassSecurityTrustStyle('translate(' + component.x + 'px,' + component.y + 'px) ' + 'rotateZ('+ component.rotate +'deg)')"
+            <div class="right-side-bar col-md-9  col-sm-12" id="map-zone">
+                <div [ngClass]="component.classList" *ngFor="let component of selectedFloor.components; let i = index" [attr.index]="i" [style.transform]="domSanitizer.bypassSecurityTrustStyle('translate(' + component.x + 'px,' + component.y + 'px) ' + 'rotateZ('+ component.rotate +'deg)')"
                     [style.webkitTransform]="domSanitizer.bypassSecurityTrustStyle('translate(' + component.x + 'px,' + component.y + 'px) ' + 'rotateZ('+ component.rotate +'deg)')" [attr.data-x]="component.x" [attr.data-y]="component.y" [style.width]="component.width + 'px'"
                     [style.height]="component.height + 'px'" [style.zIndex]="component.zIndex" (click)="selectComponent(component)" [class.selected]="selectedComponent && selectedComponent.id == component.id">
                     <div class="title">
-                        {{component.title}}
+                        <span> 
+                            {{component.title}}
+                        </span>
                     </div>
                     <div class="content" [innerHTML]="component.innerHtml"></div>
                     <div class="top-rule rule"></div>
@@ -59,6 +69,9 @@
                     <div class="bottom-rule rule"></div>
                     <div class="right-rule rule"></div>
                 </div>
+                <span class="btn btn-danger fab-button" (click)="buttonFabClick()">
+                    <i class="fa fa-plus"></i>
+                </span>
             </div>
         </div>
     </div>

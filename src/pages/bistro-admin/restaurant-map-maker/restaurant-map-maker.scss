@@ -1,7 +1,7 @@
 page-restaurant-map-maker {
     .restaurant-map {
         position: absolute;
-        left: 0;
+        left: 16px;
         right: 16px;
         top: 70px;
         bottom: 16px;
@@ -10,6 +10,7 @@ page-restaurant-map-maker {
         .left-side-bar {
             float: left;
             overflow-x: visible;
+            padding-left: 0;
             .component-list {
                 .component-type {
                     &.dragging {
@@ -46,6 +47,14 @@ page-restaurant-map-maker {
             &.dragg-entered {
                 background-color: map-get($map: $BAColors, $key: blue);
             }
+        }
+        .fab-button {
+            color: map-get($map: $BAColors, $key: white);
+            background-color: map-get($map: $BAColors, $key: primary);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
         }
         .map-symbol {
             width: 50px;
@@ -111,6 +120,12 @@ page-restaurant-map-maker {
                 justify-content: center;
                 align-items: center;
                 z-index: 2;
+                overflow: hidden;
+                span {
+                    padding: 5px;
+                    background-color: rgba(238, 238, 238, 0.7);
+                    font-weight: bold;
+                }
             }
             .content {
                 z-index: 1;
@@ -210,6 +225,12 @@ page-restaurant-map-maker {
             z-index: 8;
             $step: 5px;
             background-image: repeating-linear-gradient(-45deg, map-get($map: $BAColors, $key: lightgray), map-get($map: $BAColors, $key: lightgray) $step, map-get($map: $BAColors, $key: gray) $step, map-get($map: $BAColors, $key: gray) $step*2);
+        }
+    }
+    //Style for only mobile
+    @media(max-width: 768px) {
+        .left-side-bar {
+            display: none;
         }
     }
 }
