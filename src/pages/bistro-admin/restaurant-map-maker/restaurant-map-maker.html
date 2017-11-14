@@ -5,7 +5,13 @@
 <ion-content>
     <div class="ba-content">
         <ba-title [title]="'Sơ đồ nhà hàng'"></ba-title>
-        <div class="restaurant-map">
+        <div class="main-controls">
+            <ba-buttons-function [showButton]="{buttonRemove: true, buttonCheck: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
+        </div>
+        <div class="message" *ngIf="!showEditor" text-center>
+            Tính năng này chưa được hỗ trợ trên máy tính bảng hay di động. Mời bạn trải nghiệm trên máy tính với màn hình lớn hơn.
+        </div>
+        <div class="restaurant-map" *ngIf="showEditor">
             <div class="left-side-bar col-md-3 col-sm-12">
                 <ul class="list-group component-list">
                     <li class="list-group-item component-type" *ngFor="let componentType of componentTypes" [attr.component]="componentType.type">
@@ -55,7 +61,7 @@
                 </div>
             </div>
             <div class="right-side-bar col-md-9  col-sm-12" id="map-zone">
-                <div [ngClass]="component.classList" *ngFor="let component of selectedFloor.components; let i = index" [attr.index]="i" [style.transform]="domSanitizer.bypassSecurityTrustStyle('translate(' + component.x + 'px,' + component.y + 'px) ' + 'rotateZ('+ component.rotate +'deg)')"
+                <div [ngClass]="component.classList" *ngFor="let component of selectedMap.components; let i = index" [attr.index]="i" [style.transform]="domSanitizer.bypassSecurityTrustStyle('translate(' + component.x + 'px,' + component.y + 'px) ' + 'rotateZ('+ component.rotate +'deg)')"
                     [style.webkitTransform]="domSanitizer.bypassSecurityTrustStyle('translate(' + component.x + 'px,' + component.y + 'px) ' + 'rotateZ('+ component.rotate +'deg)')" [attr.data-x]="component.x" [attr.data-y]="component.y" [style.width]="component.width + 'px'"
                     [style.height]="component.height + 'px'" [style.zIndex]="component.zIndex" (click)="selectComponent(component)" [class.selected]="selectedComponent && selectedComponent.id == component.id">
                     <div class="title">
@@ -69,9 +75,6 @@
                     <div class="bottom-rule rule"></div>
                     <div class="right-rule rule"></div>
                 </div>
-                <span class="btn btn-danger fab-button" (click)="buttonFabClick()">
-                    <i class="fa fa-plus"></i>
-                </span>
             </div>
         </div>
     </div>

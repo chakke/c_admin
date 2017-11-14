@@ -1,13 +1,12 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ModalController, Platform } from 'ionic-angular';
 import * as interact from "interactjs";
 import { UIComponent } from '../../../providers/bistro-admin/classes/ui-component';
-import { ComponentFactory } from '../../../providers/bistro-admin/component-factory/component-factory';
 import { IComponentType } from "../../../providers/bistro-admin/interface/i-component-type";
-import { Floor } from "../../../providers/bistro-admin/classes/floor";
-import { ComponentType } from "../../../providers/bistro-admin/app-constant";
-import { Utils } from "../../../providers/app-utils";
+import { Map } from "../../../providers/bistro-admin/classes/map";
+import { ComponentType, MapConstrant, FunctionButtonName } from "../../../providers/bistro-admin/app-constant";
+import { Utils } from "../../../providers/app-utils"; 
 
 @IonicPage()
 @Component({
@@ -15,17 +14,19 @@ import { Utils } from "../../../providers/app-utils";
   templateUrl: 'restaurant-map-maker.html',
 })
 export class RestaurantMapMakerPage {
+  showEditor = true;
   isElementIn = false;
   mapZone: HTMLElement;
   componentTypes: Array<IComponentType> = [];
 
-  selectedFloor: Floor;
+  selectedMap: Map;
   selectedComponent: UIComponent;
   defaultWidth = 50;
   defaultHeight = 50;
 
   constructor(public navCtrl: NavController, public domSanitizer: DomSanitizer,
-    public navParams: NavParams, public alertCtrl: AlertController, public changeDetectorRef: ChangeDetectorRef) {
+    public navParams: NavParams, public alertCtrl: AlertController, private platform: Platform,
+    public modalCtrl: ModalController, public changeDetectorRef: ChangeDetectorRef) {
     this.componentTypes = [
       ComponentType.AREA,
       ComponentType.TABLE,
@@ -37,15 +38,56 @@ export class RestaurantMapMakerPage {
       ComponentType.STAIR,
       ComponentType.RESTRICT
     ]
-    this.selectedFloor = new Floor();
+    this.selectedMap = new Map(0);
 
   }
 
   ionViewDidLoad() {
     this.mapZone = document.getElementById("map-zone");
+    this.platform.resize.subscribe(() => {
+      console.log("platform resize", this.platform.width());
+      this.resizeMap();
+    });
+  }
+
+  resizeMap() {
+    if (this.platform.width() <= 768) {
+      this.showEditor = false;
+    } else {
+      this.showEditor = true;
+      //Wait a tick for view rendered
+      setTimeout(() => {
+        this.mapZone = document.getElementById("map-zone");
+        console.log("map zone", this.mapZone);
+        if (this.mapZone) {
+          this.mapZone.style.maxWidth = null;
+          this.mapZone.style.maxHeight = null;
+          //wait another tick
+          setTimeout(() => {
+            let width = this.mapZone.offsetWidth;
+            let height = this.mapZone.offsetHeight;
+            if (width / MapConstrant.WIDTH * MapConstrant.HEIGHT <= height) {
+              this.mapZone.style.maxHeight = width / MapConstrant.WIDTH * MapConstrant.HEIGHT + "px";
+            } else {
+              this.mapZone.style.maxWidth = height / MapConstrant.HEIGHT * MapConstrant.WIDTH + "px";
+            }
+            let ratio = this.mapZone.offsetWidth / this.selectedMap.getWidth();
+            this.selectedMap.components.forEach(component => {
+              component.width *= ratio;
+              component.height *= ratio;
+              component.x *= ratio;
+              component.y *= ratio;
+            });
+            this.selectedMap.setWidth(this.mapZone.offsetWidth);
+            this.selectedMap.setHeight(this.mapZone.offsetHeight);
+          }, 1)
+        }
+      }, 1)
+    }
   }
 
   ionViewDidEnter() {
+    this.resizeMap();
     interact('.component-type')
       .draggable({
         // enable inertial throwing
@@ -81,7 +123,7 @@ export class RestaurantMapMakerPage {
         },
 
         // call this function on every dragend event
-        onend: (event) => { 
+        onend: (event) => {
           let target = event.target;
           target.style.webkitTransform =
             target.style.transform = null;
@@ -130,7 +172,7 @@ export class RestaurantMapMakerPage {
           if (y < 0) y = 0;
           let type = event.relatedTarget.getAttribute("component");
 
-          this.selectedFloor.addComponent(type, null, x, y);
+          this.selectedMap.addComponent(type, null, x, y);
 
           event.target.classList.remove('dragg-entered');
           this.changeDetectorRef.detectChanges();
@@ -155,8 +197,8 @@ export class RestaurantMapMakerPage {
         onmove: (event) => {
           let target = event.target;
           let index = target.getAttribute('index');
-          if (index && this.selectedFloor.components[index]) {
-            let component = this.selectedFloor.components[index];
+          if (index && this.selectedMap.components[index]) {
+            let component = this.selectedMap.components[index];
             this.addElementToArray("dragging", component.classList);
             component.x += event.dx;
             component.y += event.dy;
@@ -167,8 +209,8 @@ export class RestaurantMapMakerPage {
         onend: (event) => {
           let target = event.target;
           let index = target.getAttribute('index');
-          if (index && this.selectedFloor.components[index]) {
-            let component = this.selectedFloor.components[index];
+          if (index && this.selectedMap.components[index]) {
+            let component = this.selectedMap.components[index];
             this.removeElementFromArray("dragging", component.classList);
             this.mapZone.classList.remove("dragging");
           }
@@ -186,8 +228,8 @@ export class RestaurantMapMakerPage {
       .on('resizemove', (event) => {
         let target = event.target;
         let index = target.getAttribute('index');
-        if (index && this.selectedFloor.components[index]) {
-          let component = this.selectedFloor.components[index];
+        if (index && this.selectedMap.components[index]) {
+          let component = this.selectedMap.components[index];
           this.addElementToArray("dragging", component.classList);
           component.x += event.deltaRect.left;
           component.y += event.deltaRect.top;
@@ -197,11 +239,11 @@ export class RestaurantMapMakerPage {
         }
         this.changeDetectorRef.detectChanges();
       })
-      .on('resizeend', (event) => { 
+      .on('resizeend', (event) => {
         let target = event.target;
         let index = target.getAttribute('index');
-        if (index && this.selectedFloor.components[index]) {
-          let component = this.selectedFloor.components[index];
+        if (index && this.selectedMap.components[index]) {
+          let component = this.selectedMap.components[index];
           this.removeElementFromArray("dragging", component.classList);
           this.mapZone.classList.remove("dragging");
         }
@@ -213,14 +255,14 @@ export class RestaurantMapMakerPage {
     let index = array.indexOf(element);
     if (index == -1) {
       array.push(element);
-    } 
+    }
   }
 
   removeElementFromArray(element: string, array: Array<string>) {
     let index = array.indexOf(element);
     if (index > -1) {
       array.splice(index, 1);
-    } 
+    }
   }
 
   selectComponent(component: UIComponent) {
@@ -246,11 +288,11 @@ export class RestaurantMapMakerPage {
       }, {
         text: "OK",
         handler: () => {
-          let index = this.selectedFloor.components.findIndex(elm => {
+          let index = this.selectedMap.components.findIndex(elm => {
             return elm.id == this.selectedComponent.id;
           });
           if (index > -1) {
-            this.selectedFloor.components.splice(index, 1);
+            this.selectedMap.components.splice(index, 1);
             this.selectedComponent = null;
           }
         }
@@ -282,7 +324,7 @@ export class RestaurantMapMakerPage {
       }, {
         text: "OK",
         handler: (event) => {
-          let index = this.selectedFloor.components.findIndex(elm => {
+          let index = this.selectedMap.components.findIndex(elm => {
             return elm.id == this.selectedComponent.id;
           });
           if (index > -1 && event) {
@@ -320,7 +362,7 @@ export class RestaurantMapMakerPage {
             if (quantity < 0) quantity = 0;
             if (quantity > 20) quantity = 20;
             this.addMulticomponent(quantity, this.selectedComponent.type.type, (this.selectedComponent.title ? this.selectedComponent.title : undefined),
-              this.selectedComponent.width, this.selectedComponent.height); 
+              this.selectedComponent.width, this.selectedComponent.height);
 
           }
         }
@@ -360,15 +402,15 @@ export class RestaurantMapMakerPage {
         role: "cancel"
       }, {
         text: "OK",
-        handler: (data) => { 
+        handler: (data) => {
           if (data) {
             let quantity = +data["quantily"];
             let name = data["name"];
             let width = data["width"];
-            let height = data["height"]; 
+            let height = data["height"];
             quantity = this.validateNumber(quantity, 1, 1, 20);
             width = this.validateNumber(width, this.defaultWidth, 5, 200);
-            height = this.validateNumber(height, this.defaultHeight, 5, 200); 
+            height = this.validateNumber(height, this.defaultHeight, 5, 200);
             if (!name) {
               name = undefined;
             }
@@ -394,7 +436,7 @@ export class RestaurantMapMakerPage {
         y += delta;
         j = 0;
       }
-      this.selectedFloor.addComponent(type, title, x + j * delta, y + j * delta, width, height);
+      this.selectedMap.addComponent(type, title, x + j * delta, y + j * delta, width, height);
       j++;
     }
   }
@@ -402,14 +444,18 @@ export class RestaurantMapMakerPage {
   validateNumber(input: any, defaultValue: number, min: number, max: number) {
     if (!input || !Utils.isNumeric(+input)) {
       input = defaultValue;
-    } 
+    }
     if (input < min) input = min;
     if (input > max) input = max;
     return input;
   }
 
-  buttonFabClick(){
-    
+  functionButtonClick(button: string) { 
+    if(button == FunctionButtonName.BUTTON_REMOVE){
+      console.log("cancel");
+    }
+    if(button == FunctionButtonName.BUTTON_CHECK){
+      console.log("save");
+    }
   }
-
 }

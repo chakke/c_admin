@@ -4,6 +4,7 @@ import { Province } from "./province";
 import { Banner } from "./banner";
 import { Table } from "./table";
 import { WorkingTime } from "./working-time";
+import { Floor } from "./floor";
 
 export class Restaurant {
     id: number;
@@ -23,6 +24,7 @@ export class Restaurant {
     banners: Array<Banner>;
     tables: Array<Table>;
     workingHours: Array<WorkingTime>;
+    floors: Array<Floor> = [];
 
     constructor(
         id: number,

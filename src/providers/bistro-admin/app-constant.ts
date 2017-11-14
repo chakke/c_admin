@@ -67,6 +67,7 @@ export class FunctionButtonName {
 }
 
 import { IComponentType } from "../bistro-admin/interface/i-component-type";
+import { clamp } from "ionic-angular/util/util";
 export class ComponentType {
     public static UI_COMPONENT: IComponentType = {
         type: "component",
@@ -108,4 +109,9 @@ export class ComponentType {
         type: "restrict",
         name: "Khu vực cấm"
     }
+}
+
+export class MapConstrant {
+    public static WIDTH: number = 2;
+    public static HEIGHT: number = 1;
 }

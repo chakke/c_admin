@@ -1,6 +1,6 @@
 
-import { UIComponent, Area, Bar, Door, Kitchen, Receptionist, Stair, Table, WC, Restrict } from "../classes/ui-component";
-import { ComponentType } from "../app-constant";
+import { UIComponent, Area, Bar, Door, Kitchen, Receptionist, Stair, Table, WC, Restrict } from "../../classes/ui-component";
+import { ComponentType } from "../../app-constant";
 
 export class ComponentFactory {
     public getComponent(componentType: string, title?: string, x?: number, y?: number, width?: number, height?: number): UIComponent {
