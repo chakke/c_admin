@@ -6,9 +6,12 @@ import { UIComponent } from '../../../providers/bistro-admin/classes/ui-componen
 import { IComponentType } from "../../../providers/bistro-admin/interface/i-component-type";
 import { Map } from "../../../providers/bistro-admin/classes/map";
 import { ComponentType, MapConstrant, FunctionButtonName } from "../../../providers/bistro-admin/app-constant";
-import { Utils } from "../../../providers/app-utils"; 
+import { Utils } from "../../../providers/app-utils";
+import { AppControllerProvider } from "../../../providers/bistro-admin/app-controller/app-controller";
 
-@IonicPage()
+@IonicPage({
+  segment: "restaurant-map-maker/:restId/:floorId/:mapId"
+})
 @Component({
   selector: 'page-restaurant-map-maker',
   templateUrl: 'restaurant-map-maker.html',
@@ -26,7 +29,8 @@ export class RestaurantMapMakerPage {
 
   constructor(public navCtrl: NavController, public domSanitizer: DomSanitizer,
     public navParams: NavParams, public alertCtrl: AlertController, private platform: Platform,
-    public modalCtrl: ModalController, public changeDetectorRef: ChangeDetectorRef) {
+    public modalCtrl: ModalController, public changeDetectorRef: ChangeDetectorRef,
+    public appController: AppControllerProvider) {
     this.componentTypes = [
       ComponentType.AREA,
       ComponentType.TABLE,
@@ -38,27 +42,26 @@ export class RestaurantMapMakerPage {
       ComponentType.STAIR,
       ComponentType.RESTRICT
     ]
-    this.selectedMap = new Map(0);
+    this.selectedMap = new Map(0, 0, "Map 1", []);
 
   }
 
   ionViewDidLoad() {
     this.mapZone = document.getElementById("map-zone");
-    this.platform.resize.subscribe(() => {
-      console.log("platform resize", this.platform.width());
+    this.platform.resize.subscribe(() => { 
       this.resizeMap();
     });
   }
 
   resizeMap() {
+    console.log("resize");
     if (this.platform.width() <= 768) {
       this.showEditor = false;
     } else {
       this.showEditor = true;
       //Wait a tick for view rendered
       setTimeout(() => {
-        this.mapZone = document.getElementById("map-zone");
-        console.log("map zone", this.mapZone);
+        this.mapZone = document.getElementById("map-zone"); 
         if (this.mapZone) {
           this.mapZone.style.maxWidth = null;
           this.mapZone.style.maxHeight = null;
@@ -80,13 +83,23 @@ export class RestaurantMapMakerPage {
             });
             this.selectedMap.setWidth(this.mapZone.offsetWidth);
             this.selectedMap.setHeight(this.mapZone.offsetHeight);
-          }, 1)
+          }, 10)
         }
-      }, 1)
+      }, 10)
     }
   }
 
   ionViewDidEnter() {
+    if (this.navParams.get("mapId")) {
+      let restaurantId = this.navParams.get("restId");
+      let floorId = this.navParams.get("floorId");
+      let mapId = this.navParams.get("mapId");
+      this.appController.getMapById(mapId).then(map => {
+        this.selectedMap = map; 
+      });
+    } else {
+      this.appController.setRootPage("BaRestaurantPage");
+    }
     this.resizeMap();
     interact('.component-type')
       .draggable({
@@ -281,7 +294,7 @@ export class RestaurantMapMakerPage {
   }
   delete() {
     let alert = this.alertCtrl.create({
-      message: "Bạn có chắc chắn muốn xóa phần tử: " + (this.selectedComponent.title || this.selectedComponent.typeName),
+      message: "Bạn có chắc chắn muốn xóa phần tử: " + (this.selectedComponent.title || this.selectedComponent.type.name),
       buttons: [{
         text: "Cancel",
         role: "cancel"
@@ -450,12 +463,15 @@ export class RestaurantMapMakerPage {
     return input;
   }
 
-  functionButtonClick(button: string) { 
-    if(button == FunctionButtonName.BUTTON_REMOVE){
-      console.log("cancel");
+  functionButtonClick(button: string) {
+    if (button == FunctionButtonName.BUTTON_REMOVE) { 
     }
-    if(button == FunctionButtonName.BUTTON_CHECK){
-      console.log("save");
+    if (button == FunctionButtonName.BUTTON_CHECK) { 
+
     }
+    this.appController.setRootPage("BaFloorMapPage", {
+      "restId": this.navParams.get('restId'),
+      "floorId": this.navParams.get('floorId')
+    })
   }
 }

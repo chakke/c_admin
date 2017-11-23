@@ -45,8 +45,7 @@ export class BaProgressComponent {
     if (this.interval) clearInterval(this.interval);
     this.interval = setInterval(() => {
       if (this.progress < 95)
-        this.progress += this.percentPerTime;
-      console.log(this.progress);
+        this.progress += this.percentPerTime; 
     }, this.debounceTime)
   }
 
@@ -68,8 +67,7 @@ export class BaProgressComponent {
     if (this.debounceTime < this.timePerequest) this.debounceTime = this.timePerequest;
     this.interval = setInterval(() => {
       if (this.progress < 95)
-        this.progress += this.percentPerTime;
-      console.log(this.progress);
+        this.progress += this.percentPerTime; 
     }, this.debounceTime)
   }
 

@@ -23,8 +23,7 @@ export class ProvinceControllerProvider {
   }
 
   broadcastChange(data) {
-    this.provinceSubject.next(data);
-    console.log("hey your province changed", data);
+    this.provinceSubject.next(data); 
   }
 
   resetData() {

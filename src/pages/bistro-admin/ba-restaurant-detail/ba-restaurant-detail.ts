@@ -26,8 +26,7 @@ export class BaRestaurantDetailPage {
 
     if (this.navParams.get("id")) {
       this.appController.getRestauranById(this.navParams.get("id")).then(restaurant => {
-        this.restaurant = restaurant;
-        console.log("your fucker", restaurant);
+        this.restaurant = restaurant; 
         if (this.restaurant.image) {
           let lastIndex = this.restaurant.image.lastIndexOf("/");
           if (lastIndex > -1) {
@@ -72,8 +71,7 @@ export class BaRestaurantDetailPage {
     this.logoName = "Chưa chọn ảnh nào";
   }
 
-  functionButtonClick(button) {
-    console.log("button click", button);
+  functionButtonClick(button) { 
     this.appController.setRootPage("BaRestaurantPage");
   }
 

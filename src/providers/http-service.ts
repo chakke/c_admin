@@ -117,15 +117,13 @@ export class HttpService {
     }
 
     public showProgress() {
-        this.numberOfRequest++;
-        console.log("show loader", this.numberOfRequest);
+        this.numberOfRequest++; 
         this.progressCtrl.show();
     }
 
     public hideProgress() {
         this.numberOfRequest--;
-        if (this.numberOfRequest == 0) {
-            console.log("hide loader");
+        if (this.numberOfRequest == 0) { 
             this.progressCtrl.hide();
         } else {
             this.progressCtrl.speedUp();

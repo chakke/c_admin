@@ -2,19 +2,27 @@ import { UIComponent } from "./ui-component";
 import { ComponentFactory } from "../factories/component-factory/component-factory";
 export class Map {
     private id: number;
+    private floorId: number;
+    public title: string;
     components: Array<UIComponent> = [];
     private componentFactory: ComponentFactory;
     private numberOfElement: any = {};
     private currentWidth: number = 0;
     private currentHeight: number = 0;
 
-    constructor(id: number) {
+    constructor(id: number, floorId: number, title: string, components: Array<UIComponent>, numberOfElement?: number, currentWidth?: number, currentHeight?: number) {
         this.id = id;
+        this.floorId = floorId;
+        this.title = title;
+        this.numberOfElement = (numberOfElement ? numberOfElement : {});
+        this.currentWidth = (currentWidth ? currentWidth : 0);
+        this.currentHeight = (currentHeight ? currentHeight : 0);
+        this.components = components ? components : [];
         this.componentFactory = new ComponentFactory();
     }
 
     addComponent(type: string, title?: string, x?: number, y?: number, width?: number, height?: number) {
-        let component = this.componentFactory.getComponent(type, title, x, y, width, height);
+        let component = this.componentFactory.getComponent(0, type, title, x, y, width, height);
         if (this.numberOfElement[type]) {
             this.numberOfElement[type] += 1;
         } else {

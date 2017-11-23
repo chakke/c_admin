@@ -24,8 +24,7 @@ export class StaffControllerProvider {
   }
 
   broadcastChange(data) {
-    this.StaffSubject.next(data);
-    console.log("hey your Staff changed", data);
+    this.StaffSubject.next(data); 
   }
 
   resetData() {

@@ -68,8 +68,7 @@ export class BaVendorPage {
     this.logoName = "Chưa chọn ảnh nào";
   }
 
-  functionButtonClick(button) {
-    console.log("functionButtonClick", button);
+  functionButtonClick(button) { 
     this.appController.setRootPage("BaDashboardPage");
   }
 }

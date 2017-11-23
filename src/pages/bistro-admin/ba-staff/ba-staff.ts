@@ -11,12 +11,10 @@ export class BaStaffPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad BaStaffPage');
+  ionViewDidLoad() { 
   }
 
-  functionButtonClick(button) {
-    console.log("functionButtonClick", button);
+  functionButtonClick(button) { 
   }
 
 }

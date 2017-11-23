@@ -9,12 +9,11 @@ import { AppControllerProvider } from '../providers/bistro-admin/app-controller/
   templateUrl: 'app.html'
 })
 export class MyApp {
-  // rootPage: any = "CreateNewComponentPage";
-  rootPage: any = "RestaurantMapMakerPage";
+  rootPage: any = "BaDashboardPage";
+  // rootPage: any = "RestaurantMapMakerPage";
   menuItems = [];
   startUpPage = ["BaLoadingPage", "BaLoginPage", "BaRegisterPage"];
-
-  @ViewChild("nav") nav: NavController;
+ 
   constructor(
     platform: Platform,
     statusBar: StatusBar,
@@ -36,8 +35,7 @@ export class MyApp {
 
   ngAfterViewInit() {
     this.menuItems = this.appController.getMenuItems();
-    this.app.getActiveNav().viewWillEnter.subscribe(event => {
-      console.log("current id", event.id);
+    this.app.getActiveNav().viewWillEnter.subscribe(event => { 
       this.appController.setActivePage(event.id);
     })
   }

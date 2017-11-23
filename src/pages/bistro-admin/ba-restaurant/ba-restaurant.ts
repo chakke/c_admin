@@ -49,5 +49,7 @@ export class BaRestaurantPage {
 
   }
 
-
+  gotoMap(restaurantId: number){
+    this.appController.pushPage("BaRestaurantMapPage", {id: restaurantId});
+  }
 }

@@ -170,6 +170,86 @@ export class BistroHttpServiceProvider {
       .build())
   }
 
+  //Lay thong tin cac tang cua nha hang
+  getFloorInRestaurant(restId: number) {
+    if (this.isUseFakeData) {
+      return new Promise((resolve, reject) => {
+        this.requestGet(AssetsUrl.BASE_URL + FakeAPIUrl.FLOOR, "").then(data => {
+          if (data && data.content) {
+            let floors = data.content;
+            let results = floors.filter(elm => {
+              return elm.restId == restId;
+            })
+            resolve({
+              "result": 1,
+              "content": results
+            });
+          } else {
+            reject();
+          }
+        });
+      })
+    }
+    return this.requestGet(this.serviceUrl + APIUrl.RESTAURANT_DETAIL, ParamBuilder.builder()
+      .add(ParamsKey.REST_ID, restId)
+      .add(ParamsKey.SIGN, Md5.hashStr(restId + APIUrl.CLIENT_KEY))
+      .build())
+  }
+
+  //Lay thong tin ban do cua 1 tang
+  getMapInFloor(floorId: number) {
+    if (this.isUseFakeData) {
+      return new Promise((resolve, reject) => {
+        this.requestGet(AssetsUrl.BASE_URL + FakeAPIUrl.Map, "").then(data => {
+          if (data && data.content) {
+            let maps = data.content;
+            let results = maps.filter(elm => {
+              return (elm.floorId == floorId || elm.floorId == 1);
+            })
+            resolve({
+              "result": 1,
+              "content": results
+            });
+          } else {
+            reject();
+          }
+        });
+      })
+    }
+    return this.requestGet(this.serviceUrl + APIUrl.RESTAURANT_DETAIL, ParamBuilder.builder()
+      .add(ParamsKey.REST_ID, floorId)
+      .add(ParamsKey.SIGN, Md5.hashStr(floorId + APIUrl.CLIENT_KEY))
+      .build())
+  }
+
+  //Lay thong tin ban do cua 1 tang
+  getMapById(mapId: number) {
+    if (this.isUseFakeData) {
+      return new Promise((resolve, reject) => {
+        this.requestGet(AssetsUrl.BASE_URL + FakeAPIUrl.Map, "").then(data => {
+          if (data && data.content) {
+            let maps = data.content;
+            let index = maps.findIndex(elm => {
+              return elm.id == mapId;
+            })
+            if (index > -1) {
+              resolve({
+                "result": 1,
+                "content": maps[index]
+              });
+            }
+          } else {
+            reject();
+          }
+        });
+      })
+    }
+    return this.requestGet(this.serviceUrl + APIUrl.RESTAURANT_DETAIL, ParamBuilder.builder()
+      .add(ParamsKey.REST_ID, restId)
+      .add(ParamsKey.SIGN, Md5.hashStr(restId + APIUrl.CLIENT_KEY))
+      .build())
+  }
+
   //Lay danh sach, danh muc do an cua nha hang
   getMenuCategory(restId: number) {
     return this.requestGet(this.serviceUrl + APIUrl.MENU_CATEGORY, ParamBuilder.builder()

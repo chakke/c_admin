@@ -15,6 +15,8 @@ import { AssetsUrl } from '../app-constant';
 
 import { Toast, ToastController, App } from 'ionic-angular';
 import 'rxjs/add/operator/map';
+import { Floor } from '../classes/floor';
+import { Map } from '../classes/map';
 @Injectable()
 export class AppControllerProvider {
 
@@ -120,8 +122,7 @@ export class AppControllerProvider {
           item.active = true;
         }
       }
-    }
-    console.log("set active page", page, this.menuItems);
+    } 
   }
 
   loadUser() {
@@ -161,11 +162,72 @@ export class AppControllerProvider {
         }
       })
     })
-
   }
 
   getRestauranController() {
     return this.restaurantController;
+  }
+
+  getFloorsInRestaurant(restId: number): Promise<Array<Floor>> {
+    return new Promise((resolve, reject) => {
+      this.httpService.getFloorInRestaurant(restId).then(data => {
+        let floors: Array<Floor> = []; 
+        if (data && data.content) {
+          data.content.forEach(element => {
+            let floor = this.restaurantController.getFloorFromData(element);
+            floors.push(floor);
+          });
+          resolve(floors);
+        }
+        else {
+          reject();
+        }
+      })
+    })
+  }
+
+  getMapInFloor(floorId: number): Promise<Array<Map>> {
+    return new Promise((resolve, reject) => {
+      this.httpService.getMapInFloor(floorId).then(data => {
+        let maps: Array<Map> = []; 
+        if (data && data.content) {
+          data.content.forEach(element => {
+            let map = this.restaurantController.getMapFromData(element);
+            maps.push(map);
+          });
+          resolve(maps);
+        }
+        else {
+          reject();
+        }
+      })
+    })
+  }
+
+  getMapById(mapId: number): Promise<Map> {
+    return new Promise((resolve, reject) => {
+      this.httpService.getMapById(mapId).then(data => {
+        if (data && data.content) { 
+          resolve(this.restaurantController.getMapFromData(data.content));
+        }
+        else {
+          reject();
+        }
+      })
+    })
+  }
+
+
+  deleteFloor(id: number): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      resolve(true);
+    })
+  }
+
+  editFloor(id: number, name: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      resolve(true);
+    })
   }
 
   loadProvince() {

@@ -35,6 +35,9 @@
                                 <button class="btn btn-success" (click)="gotoRestaurantDetail(restaurant.id)">
                                     <i class="fa fa-pencil" aria-hidden="true"></i>
                                 </button>
+                                <button class="btn btn-primary" (click)="gotoMap(restaurant.id)">
+                                    <i class="fa fa-map" aria-hidden="true"></i>
+                                </button>
                                 <button class="btn btn-danger" (click)="delete(restaurant)">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                 </button>
@@ -53,8 +56,8 @@
                     <li class="page-item"><span class="page-link" href="#">1</span></li>
                     <li class="page-item active">
                         <span class="page-link">
-                                2
-                                <span class="sr-only">(current)</span>
+                            2
+                            <span class="sr-only">(current)</span>
                         </span>
                     </li>
                     <li class="page-item"><span class="page-link" href="#">3</span></li>
