@@ -68,8 +68,7 @@ export class FunctionButtonName {
     public static BUTTON_CHECK: string = "buttonCheck";
 }
 
-import { IComponentType } from "../bistro-admin/interface/i-component-type";
-import { clamp } from "ionic-angular/util/util";
+import { IComponentType } from "../bistro-admin/interface/i-component-type"; 
 export class ComponentType {
     public static UI_COMPONENT: IComponentType = {
         type: "component",
@@ -114,6 +113,18 @@ export class ComponentType {
 }
 
 export class MapConstrant {
-    public static WIDTH: number = 2;
-    public static HEIGHT: number = 1;
+    public static WIDTH: number = 31;
+    public static HEIGHT: number = 20;
+}
+
+export const FIREBASE_PATH = {
+    RESTAURANT: "restaurants" ,
+    MAP: "maps"   
+}
+export const FIREBASE_CONST = {
+    DOCUMENT_CHANGE_TYPE: {
+        ADD: "added",
+        MODIFY: "modified",
+        REMOVE: "removed"
+    }
 }

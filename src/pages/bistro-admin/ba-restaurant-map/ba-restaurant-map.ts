@@ -4,6 +4,7 @@ import { AppControllerProvider } from "../../../providers/bistro-admin/app-contr
 import { Restaurant } from "../../../providers/bistro-admin/classes/restaurant";
 import { Floor } from "../../../providers/bistro-admin/classes/floor";
 import { FunctionButtonName } from "../../../providers/bistro-admin/app-constant";
+import { FirebaseServiceProvider } from '../../../providers/bistro-admin/firebase-service/firebase-service';
 
 @IonicPage({ segment: 'ba-restaurant-map/:id' })
 @Component({
@@ -16,8 +17,11 @@ export class BaRestaurantMapPage {
   maxLength = 15;
   floors: Array<Floor> = [];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
-    public appController: AppControllerProvider, public alertCtrl: AlertController) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public appController: AppControllerProvider,
+    public alertCtrl: AlertController) {
   }
 
   ionViewDidEnter() {
@@ -31,7 +35,7 @@ export class BaRestaurantMapPage {
     });
 
     if (this.navParams.get("id")) {
-      let restaurantId = this.navParams.get("id"); 
+      let restaurantId = this.navParams.get("id");
       this.appController.getRestauranById(restaurantId).then(restaurant => {
         let index = this.restaurants.findIndex(elm => {
           return elm.id == restaurantId;
@@ -51,8 +55,8 @@ export class BaRestaurantMapPage {
 
   loadFloor() {
     this.appController.getFloorsInRestaurant(this.selectedRestaurant.id).then(data => {
-      this.floors = data; 
-    }, error => { 
+      this.floors = data;
+    }, error => {
     });
   }
 

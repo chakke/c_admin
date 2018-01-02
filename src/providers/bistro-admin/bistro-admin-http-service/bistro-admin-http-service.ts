@@ -223,7 +223,7 @@ export class BistroHttpServiceProvider {
   }
 
   //Lay thong tin ban do cua 1 tang
-  getMapById(mapId: number) {
+  getMapById(mapId: number): Promise<any> {
     if (this.isUseFakeData) {
       return new Promise((resolve, reject) => {
         this.requestGet(AssetsUrl.BASE_URL + FakeAPIUrl.Map, "").then(data => {
@@ -244,10 +244,10 @@ export class BistroHttpServiceProvider {
         });
       })
     }
-    return this.requestGet(this.serviceUrl + APIUrl.RESTAURANT_DETAIL, ParamBuilder.builder()
-      .add(ParamsKey.REST_ID, restId)
-      .add(ParamsKey.SIGN, Md5.hashStr(restId + APIUrl.CLIENT_KEY))
-      .build())
+    // return this.requestGet(this.serviceUrl + APIUrl.RESTAURANT_DETAIL, ParamBuilder.builder()
+    //   .add(ParamsKey.REST_ID, restId)
+    //   .add(ParamsKey.SIGN, Md5.hashStr(restId + APIUrl.CLIENT_KEY))
+    //   .build())
   }
 
   //Lay danh sach, danh muc do an cua nha hang

@@ -6,7 +6,7 @@
     <div class="ba-content">
         <ba-title [title]="'Sơ đồ nhà hàng'"></ba-title>
         <div class="main-controls">
-            <ba-buttons-function [showButton]="{buttonRemove: true, buttonCheck: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
+            <ba-buttons-function [showButton]="{buttonRemove: true, buttonCheck: true, buttonEdit: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
         </div>
         <div class="message" *ngIf="!showEditor" text-center>
             Tính năng này chưa được hỗ trợ trên máy tính bảng hay di động. Mời bạn trải nghiệm trên máy tính với màn hình lớn hơn.

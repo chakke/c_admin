@@ -16,6 +16,7 @@ import { ProgressControllerProvider } from '../providers/bistro-admin/progress-c
 import { RestaurantControllerProvider } from '../providers/bistro-admin/restaurant-controller/restaurant-controller';
 import { ProvinceControllerProvider } from '../providers/bistro-admin/province-controller/province-controller';
 import { StaffControllerProvider } from '../providers/bistro-admin/staff-controller/staff-controller';
+import { FirebaseServiceProvider } from '../providers/bistro-admin/firebase-service/firebase-service';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { StaffControllerProvider } from '../providers/bistro-admin/staff-control
     ProgressControllerProvider,
     RestaurantControllerProvider,
     ProvinceControllerProvider,
-    StaffControllerProvider
+    StaffControllerProvider,
+    FirebaseServiceProvider
   ]
 })
 export class AppModule { }

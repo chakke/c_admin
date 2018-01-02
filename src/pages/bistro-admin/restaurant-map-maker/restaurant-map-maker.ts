@@ -8,6 +8,7 @@ import { Map } from "../../../providers/bistro-admin/classes/map";
 import { ComponentType, MapConstrant, FunctionButtonName } from "../../../providers/bistro-admin/app-constant";
 import { Utils } from "../../../providers/app-utils";
 import { AppControllerProvider } from "../../../providers/bistro-admin/app-controller/app-controller";
+import { ToastController } from 'ionic-angular/components/toast/toast-controller';
 
 @IonicPage({
   segment: "restaurant-map-maker/:restId/:floorId/:mapId"
@@ -30,7 +31,7 @@ export class RestaurantMapMakerPage {
   constructor(public navCtrl: NavController, public domSanitizer: DomSanitizer,
     public navParams: NavParams, public alertCtrl: AlertController, private platform: Platform,
     public modalCtrl: ModalController, public changeDetectorRef: ChangeDetectorRef,
-    public appController: AppControllerProvider) {
+    public toastCtrl: ToastController, public appController: AppControllerProvider) {
     this.componentTypes = [
       ComponentType.AREA,
       ComponentType.TABLE,
@@ -48,7 +49,7 @@ export class RestaurantMapMakerPage {
 
   ionViewDidLoad() {
     this.mapZone = document.getElementById("map-zone");
-    this.platform.resize.subscribe(() => { 
+    this.platform.resize.subscribe(() => {
       this.resizeMap();
     });
   }
@@ -61,7 +62,7 @@ export class RestaurantMapMakerPage {
       this.showEditor = true;
       //Wait a tick for view rendered
       setTimeout(() => {
-        this.mapZone = document.getElementById("map-zone"); 
+        this.mapZone = document.getElementById("map-zone");
         if (this.mapZone) {
           this.mapZone.style.maxWidth = null;
           this.mapZone.style.maxHeight = null;
@@ -69,20 +70,31 @@ export class RestaurantMapMakerPage {
           setTimeout(() => {
             let width = this.mapZone.offsetWidth;
             let height = this.mapZone.offsetHeight;
-            if (width / MapConstrant.WIDTH * MapConstrant.HEIGHT <= height) {
-              this.mapZone.style.maxHeight = width / MapConstrant.WIDTH * MapConstrant.HEIGHT + "px";
-            } else {
-              this.mapZone.style.maxWidth = height / MapConstrant.HEIGHT * MapConstrant.WIDTH + "px";
+            let longSize = this.selectedMap.realWidth;
+            let shortSize = this.selectedMap.realHeight;
+            if (this.selectedMap.realWidth < this.selectedMap.realHeight) {
+              longSize = this.selectedMap.realHeight;
+              shortSize = this.selectedMap.realWidth;
             }
-            let ratio = this.mapZone.offsetWidth / this.selectedMap.getWidth();
-            this.selectedMap.components.forEach(component => {
-              component.width *= ratio;
-              component.height *= ratio;
-              component.x *= ratio;
-              component.y *= ratio;
-            });
-            this.selectedMap.setWidth(this.mapZone.offsetWidth);
-            this.selectedMap.setHeight(this.mapZone.offsetHeight);
+
+            let ratio = longSize / shortSize;
+            this.mapZone.style.height = width / ratio + "px";
+            this.mapZone.style.maxHeight = width / ratio + "px";
+
+            // if (width / MapConstrant.WIDTH * MapConstrant.HEIGHT <= height) {
+            //   this.mapZone.style.maxHeight = width / MapConstrant.WIDTH * MapConstrant.HEIGHT + "px";
+            // } else {
+            //   this.mapZone.style.maxWidth = height / MapConstrant.HEIGHT * MapConstrant.WIDTH + "px";
+            // }
+            // let ratio = this.mapZone.offsetWidth / this.selectedMap.getWidth();
+            // this.selectedMap.components.forEach(component => {
+            //   component.width *= ratio;
+            //   component.height *= ratio;
+            //   component.x *= ratio;
+            //   component.y *= ratio;
+            // });
+            // this.selectedMap.setWidth(this.mapZone.offsetWidth);
+            // this.selectedMap.setHeight(this.mapZone.offsetHeight);
           }, 10)
         }
       }, 10)
@@ -95,12 +107,12 @@ export class RestaurantMapMakerPage {
       let floorId = this.navParams.get("floorId");
       let mapId = this.navParams.get("mapId");
       this.appController.getMapById(mapId).then(map => {
-        this.selectedMap = map; 
+        this.selectedMap = map;
+        this.showSizeAlert();
       });
     } else {
       this.appController.setRootPage("BaRestaurantPage");
     }
-    this.resizeMap();
     interact('.component-type')
       .draggable({
         // enable inertial throwing
@@ -262,6 +274,47 @@ export class RestaurantMapMakerPage {
         }
         this.changeDetectorRef.detectChanges();
       });
+  }
+
+  showSizeAlert() {
+    if (!(this.selectedMap.realWidth && this.selectedMap.realHeight)) {
+      let alert = this.alertCtrl.create({
+        message: "Nhập kích thước thực tế của mặt bằng: ",
+        inputs: [
+          {
+            type: "number",
+            placeholder: "Chiều dài"
+          },
+          {
+            type: "number",
+            placeholder: "Chiều rộng"
+          }
+        ],
+        buttons: [
+          {
+            text: "OK",
+            handler: (data) => {
+              if (data[0] > 0 && data[1] > 0) {
+                console.log(data);
+                this.selectedMap.realWidth = +data[0];
+                this.selectedMap.realHeight = +data[1];
+                this.resizeMap();
+              } else {
+                let toast = this.toastCtrl.create({
+                  message: "Kích thước phải là số và lớn hơn 0",
+                  duration: 3000
+                })
+                toast.present();
+                this.showSizeAlert();
+              }
+            }
+          }
+        ], 
+        enableBackdropDismiss: false
+      });
+      alert.present();
+
+    }
   }
 
   addElementToArray(element: string, array: Array<string>) {
@@ -464,11 +517,15 @@ export class RestaurantMapMakerPage {
   }
 
   functionButtonClick(button: string) {
-    if (button == FunctionButtonName.BUTTON_REMOVE) { 
+    if (button == FunctionButtonName.BUTTON_REMOVE) {
     }
-    if (button == FunctionButtonName.BUTTON_CHECK) { 
+    if (button == FunctionButtonName.BUTTON_CHECK) {
 
     }
+    if (button == FunctionButtonName.BUTTON_EDIT) {
+      this.showSizeAlert();
+    }
+    console.log("map", this.selectedMap);
     this.appController.setRootPage("BaFloorMapPage", {
       "restId": this.navParams.get('restId'),
       "floorId": this.navParams.get('floorId')

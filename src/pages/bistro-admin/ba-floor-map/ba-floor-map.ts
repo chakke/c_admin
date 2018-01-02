@@ -4,7 +4,7 @@ import { AppControllerProvider } from "../../../providers/bistro-admin/app-contr
 import { Restaurant } from "../../../providers/bistro-admin/classes/restaurant";
 import { Floor } from "../../../providers/bistro-admin/classes/floor";
 import { Map } from "../../../providers/bistro-admin/classes/map";
-import { FunctionButtonName } from "../../../providers/bistro-admin/app-constant"
+import { FunctionButtonName, FIREBASE_CONST } from "../../../providers/bistro-admin/app-constant"
 
 @IonicPage({ segment: 'ba-floor-map/:restId/:floorId' })
 @Component({
@@ -16,45 +16,72 @@ export class BaFloorMapPage {
   selectedFloor: Floor;
   floors: Array<Floor> = [];
   maps: Array<Map> = [];
+  restId = "bistro";
+  floorId = 1;
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public appController: AppControllerProvider, public alertCtrl: AlertController) {
-  }
-
-  ionViewDidLoad() { 
   }
 
   ionViewDidEnter() {
     let restId = this.navParams.get("restId");
     let floorId = this.navParams.get("floorId");
+    //fixed data
+    restId = "bistro";
+
     if (restId && floorId) {
-      this.appController.getRestauranById(restId).then(data => {
-        this.selectedRestaurant = data;
-        this.appController.getFloorsInRestaurant(restId).then(floors => {
-          this.floors = floors;
-          if (this.floors && this.floors.length > 0) { 
-            let index = this.floors.findIndex(elm => {
-              return elm.id == floorId;
-            }); 
-            if (index > -1) {
-              this.selectedFloor = this.floors[index];
-            } else {
-              this.selectedFloor = this.floors[0];
-            }
-            this.getMaps();
-          } else {
-            this.appController.setRootPage("BaRestaurantPage");
+      this.appController.fetchMapInRestaurant(restId).subscribe(data => {
+        data.docChanges.forEach(change => {
+          let mapData = change.doc.data();
+          if (change.type == FIREBASE_CONST.DOCUMENT_CHANGE_TYPE.ADD) {
+            let map = new Map(mapData.id, mapData.floor_id, mapData.title, [], 0, mapData.width, mapData.height);
+            this.maps.push(map);
           }
-        }, floorsError => { 
-        })
-      }, error => { 
+          if (change.type == FIREBASE_CONST.DOCUMENT_CHANGE_TYPE.MODIFY) {
+            let index = this.maps.findIndex(elm => {
+              return elm.id == mapData.id;
+            })
+            if (index > -1) {
+              this.maps[index].mappingFirebaseData(mapData);
+            }
+          }
+          if (change.type == FIREBASE_CONST.DOCUMENT_CHANGE_TYPE.REMOVE) {
+            let index = this.maps.findIndex(elm => {
+              return elm.id == mapData.id;
+            })
+            if (index > -1) {
+              this.maps.splice(index, 1);
+            }
+          }
+        });
       })
+      // this.appController.getRestauranById(restId).then(data => {
+      //   this.selectedRestaurant = data;
+      //   this.appController.getFloorsInRestaurant(restId).then(floors => {
+      //     this.floors = floors;
+      //     if (this.floors && this.floors.length > 0) { 
+      //       let index = this.floors.findIndex(elm => {
+      //         return elm.id == floorId;
+      //       }); 
+      //       if (index > -1) {
+      //         this.selectedFloor = this.floors[index];
+      //       } else {
+      //         this.selectedFloor = this.floors[0];
+      //       }
+      //       this.getMaps();
+      //     } else {
+      //       this.appController.setRootPage("BaRestaurantPage");
+      //     }
+      //   }, floorsError => { 
+      //   })
+      // }, error => { 
+      // })
     } else {
       this.appController.setRootPage("BaRestaurantPage");
     }
   }
 
   getMaps() {
-    this.appController.getMapInFloor(this.selectedFloor.id).then(maps => { 
+    this.appController.getMapInFloor(this.selectedFloor.id).then(maps => {
       this.maps = maps;
     });
   }
@@ -80,6 +107,11 @@ export class BaFloorMapPage {
           handler: (data) => {
             if (data && data.name) {
               map.title = data.name;
+              this.appController.updateMap(this.restId, map.id, {
+                title: map.title
+              }).then(() => {
+                console.log("update thành công");
+              })
             }
           }
         }
@@ -98,12 +130,13 @@ export class BaFloorMapPage {
         }, {
           text: "OK",
           handler: () => {
-            let index = this.maps.findIndex(elm => {
-              return elm.getId() == map.getId();
-            })
-            if (index > - 1) {
-              this.maps.splice(index, 1);
-            }
+            // let index = this.maps.findIndex(elm => {
+            //   return elm.getId() == map.getId();
+            // })
+            // if (index > - 1) {
+            //   this.maps.splice(index, 1);
+            // }
+            this.appController.deleteMaps(this.restId, map.id);
           }
         }
       ]
@@ -128,7 +161,9 @@ export class BaFloorMapPage {
             text: "OK",
             handler: (data) => {
               if (data && data.name) {
-                this.maps.push(new Map(0, this.selectedFloor.id, data["name"], []))
+                this.appController.addMapToRestaurant(this.restId, new Map("", this.floorId + "", data["name"], [], 0)).then(() => {
+                  console.log("Thêm map thành công");
+                });
               }
             }
           }
@@ -140,8 +175,8 @@ export class BaFloorMapPage {
 
   gotoMapMaker(map: Map) {
     this.appController.pushPage("RestaurantMapMakerPage", {
-      restId: this.selectedRestaurant.id,
-      floorId: this.selectedFloor.id,
+      restId: this.restId,
+      floorId: this.floorId,
       mapId: map.getId()
     });
   }

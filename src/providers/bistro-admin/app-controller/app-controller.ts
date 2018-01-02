@@ -17,6 +17,8 @@ import { Toast, ToastController, App } from 'ionic-angular';
 import 'rxjs/add/operator/map';
 import { Floor } from '../classes/floor';
 import { Map } from '../classes/map';
+import { FirebaseServiceProvider } from '../firebase-service/firebase-service';
+import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class AppControllerProvider {
 
@@ -34,7 +36,8 @@ export class AppControllerProvider {
     private app: App,
     private httpService: BistroHttpServiceProvider,
     private restaurantController: RestaurantControllerProvider,
-    private provinceController: ProvinceControllerProvider) {
+    private provinceController: ProvinceControllerProvider,
+    private firebaseService: FirebaseServiceProvider) {
     this.resourceLoader = new ResourceLoader();
     this.config = new Config();
     this.loadConfig().then(() => {
@@ -122,7 +125,7 @@ export class AppControllerProvider {
           item.active = true;
         }
       }
-    } 
+    }
   }
 
   loadUser() {
@@ -171,7 +174,7 @@ export class AppControllerProvider {
   getFloorsInRestaurant(restId: number): Promise<Array<Floor>> {
     return new Promise((resolve, reject) => {
       this.httpService.getFloorInRestaurant(restId).then(data => {
-        let floors: Array<Floor> = []; 
+        let floors: Array<Floor> = [];
         if (data && data.content) {
           data.content.forEach(element => {
             let floor = this.restaurantController.getFloorFromData(element);
@@ -189,7 +192,7 @@ export class AppControllerProvider {
   getMapInFloor(floorId: number): Promise<Array<Map>> {
     return new Promise((resolve, reject) => {
       this.httpService.getMapInFloor(floorId).then(data => {
-        let maps: Array<Map> = []; 
+        let maps: Array<Map> = [];
         if (data && data.content) {
           data.content.forEach(element => {
             let map = this.restaurantController.getMapFromData(element);
@@ -207,7 +210,7 @@ export class AppControllerProvider {
   getMapById(mapId: number): Promise<Map> {
     return new Promise((resolve, reject) => {
       this.httpService.getMapById(mapId).then(data => {
-        if (data && data.content) { 
+        if (data && data.content) {
           resolve(this.restaurantController.getMapFromData(data.content));
         }
         else {
@@ -239,5 +242,21 @@ export class AppControllerProvider {
 
   getProvincecontroller() {
     return this.provinceController;
+  }
+
+  fetchMapInRestaurant(restId: string): Observable<any> {
+    return this.firebaseService.fetchAllMapInRestaurant(restId);
+  }
+
+  addMapToRestaurant(restId: string, map: Map) {
+    return this.firebaseService.addMapToRestaurant(restId, map);
+  }
+
+  deleteMaps(restId, mapId: string) {
+    return this.firebaseService.deleteMap(restId, mapId);
+  }
+
+  updateMap(restId, mapId: string, value: any) {
+    return this.firebaseService.updateMap(restId, mapId, value);
   }
 }
