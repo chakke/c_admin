@@ -7,60 +7,58 @@ import { WorkingTime } from "./working-time";
 import { Floor } from "./floor";
 
 export class Restaurant {
-    id: number;
-    vendor: Vendor;
-    name: string;
-    email: string;
-    description: string;
     address: string;
-    city: Province;
-    phone: string;
-    latLng: LatLng;
-    offerDelivery: number;
-    offerCollection: number;
-    deliveryTime: number;
-    option: string;
-    image: string;
-    banners: Array<Banner>;
-    tables: Array<Table>;
-    workingHours: Array<WorkingTime>;
-    floors: Array<Floor> = [];
+    firebaseId: string;
+    firebaseReference: string;
+    geoPoint: string;
+    hotline: string;
+    id: string;
+    logo: string;
+    name: string;
+    state: number;
+    timeClose: string;
+    timeOpen: string;
+    vendorId: string;
+    vendorLogo: string;
+    vendorName: string;
 
-    constructor(
-        id: number,
-        vendor: Vendor,
-        name: string,
-        email: string,
-        description?: string,
-        address?: string,
-        city?: Province,
-        phone?: string,
-        latLng?: LatLng,
-        offerDelivery?: number,
-        offerCollection?: number,
-        deliveryTime?: number,
-        option?: string,
-        image?: string,
-        banners?: Array<Banner>,
-        tables?: Array<Table>,
-        workingHours?: Array<WorkingTime>
-    ) {
-        this.id = id;
-        this.vendor = vendor;
-        this.name = name;
-        this.email = email;
-        this.description = description ? description : "";
-        this.address = address ? address : "";
-        this.city = city ? city : new Province(0, "Hà Nội");
-        this.phone = phone ? phone : "";
-        this.latLng = latLng ? latLng : new LatLng(0, 0);
-        this.offerDelivery = offerDelivery ? offerDelivery : 0;
-        this.offerCollection = offerCollection ? offerCollection : 0;
-        this.deliveryTime = deliveryTime ? deliveryTime : 15;
-        this.option = option ? option : "";
-        this.image = image ? image : "";
-        this.banners = banners ? banners : [];
-        this.tables = tables ? tables : [];
-        this.workingHours = workingHours ? workingHours : [];
+    constructor() {
+        this.reset();
+    }
+
+    reset() {
+        this.address = "";
+        this.firebaseId = "";
+        this.firebaseReference = "";
+        this.geoPoint = "";
+        this.hotline = "";
+        this.id = "";
+        this.logo = "";
+        this.name = "";
+        this.state = 0;
+        this.timeClose = "";
+        this.timeOpen = "";
+        this.vendorId = "";
+        this.vendorLogo = "";
+        this.vendorName = "";
+    }
+
+    mappingFirebaseData(data) {
+        if (data) {
+            this.address = data.address;
+            this.firebaseId = data.firebase_id;
+            this.firebaseReference = data.firebase_reference;
+            this.geoPoint = data.geopoint;
+            this.hotline = data.hotline;
+            this.id = data.id;
+            this.logo = data.logo;
+            this.name = data.name;
+            this.state = +data.state;
+            this.timeClose = data.time_close;
+            this.timeOpen = data.time_open;
+            this.vendorId = data.vendor_id;
+            this.vendorLogo = data.vendor_logo;
+            this.vendorName = data.vendor_name;
+        }
     }
 }

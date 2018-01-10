@@ -16,7 +16,7 @@ export class StaffControllerProvider {
     this.resetData();
     if (data && data.length) {
       for (let staff of data) {
-        let temStaff = new Staff(staff["rest_id"], staff["staff_id"], staff["staff_name"], staff["staff_email"], +staff["staff_status"], staff["role_id"]);
+        let temStaff = new Staff();
         this.Staffs.push(temStaff);
       }
       this.broadcastChange(this.Staffs);

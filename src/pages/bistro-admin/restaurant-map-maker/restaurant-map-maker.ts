@@ -1,6 +1,6 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { IonicPage, NavController, NavParams, AlertController, ModalController, Platform } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ModalController, Platform, LoadingController } from 'ionic-angular';
 import * as interact from "interactjs";
 import { UIComponent } from '../../../providers/bistro-admin/classes/ui-component';
 import { IComponentType } from "../../../providers/bistro-admin/interface/i-component-type";
@@ -11,7 +11,7 @@ import { AppControllerProvider } from "../../../providers/bistro-admin/app-contr
 import { ToastController } from 'ionic-angular/components/toast/toast-controller';
 
 @IonicPage({
-  segment: "restaurant-map-maker/:restId/:floorId/:mapId"
+  segment: "restaurant-map-maker/:restId/:restName/:mapId"
 })
 @Component({
   selector: 'page-restaurant-map-maker',
@@ -27,11 +27,25 @@ export class RestaurantMapMakerPage {
   selectedComponent: UIComponent;
   defaultWidth = 50;
   defaultHeight = 50;
+  restId = "";
+  restName = "";
+  floorId = 1;
+  longSize = 1;
+  shortSize = 1;
 
   constructor(public navCtrl: NavController, public domSanitizer: DomSanitizer,
     public navParams: NavParams, public alertCtrl: AlertController, private platform: Platform,
     public modalCtrl: ModalController, public changeDetectorRef: ChangeDetectorRef,
-    public toastCtrl: ToastController, public appController: AppControllerProvider) {
+    public toastCtrl: ToastController, public appController: AppControllerProvider,
+    public loadingCtrl: LoadingController) {
+
+    this.selectedMap = new Map();
+    if (this.navParams.get("restId")) {
+      this.restId = this.navParams.get("restId")
+    }
+    if (this.navParams.get("restName")) {
+      this.restName = this.navParams.get("restName")
+    }
     this.componentTypes = [
       ComponentType.AREA,
       ComponentType.TABLE,
@@ -43,19 +57,9 @@ export class RestaurantMapMakerPage {
       ComponentType.STAIR,
       ComponentType.RESTRICT
     ]
-    this.selectedMap = new Map(0, 0, "Map 1", []);
-
-  }
-
-  ionViewDidLoad() {
-    this.mapZone = document.getElementById("map-zone");
-    this.platform.resize.subscribe(() => {
-      this.resizeMap();
-    });
   }
 
   resizeMap() {
-    console.log("resize");
     if (this.platform.width() <= 768) {
       this.showEditor = false;
     } else {
@@ -70,31 +74,32 @@ export class RestaurantMapMakerPage {
           setTimeout(() => {
             let width = this.mapZone.offsetWidth;
             let height = this.mapZone.offsetHeight;
-            let longSize = this.selectedMap.realWidth;
-            let shortSize = this.selectedMap.realHeight;
+            this.longSize = this.selectedMap.realWidth;
+            this.shortSize = this.selectedMap.realHeight;
             if (this.selectedMap.realWidth < this.selectedMap.realHeight) {
-              longSize = this.selectedMap.realHeight;
-              shortSize = this.selectedMap.realWidth;
+              this.longSize = this.selectedMap.realHeight;
+              this.shortSize = this.selectedMap.realWidth;
             }
 
-            let ratio = longSize / shortSize;
+            let ratio = this.longSize / this.shortSize;
             this.mapZone.style.height = width / ratio + "px";
             this.mapZone.style.maxHeight = width / ratio + "px";
+            if (this.selectedMap.currentWidth && this.selectedMap.currentHeight) {
+              let ratioWidth = width / this.selectedMap.currentWidth;
+              let ratioHeight = (width / ratio) / this.selectedMap.currentHeight;
 
-            // if (width / MapConstrant.WIDTH * MapConstrant.HEIGHT <= height) {
-            //   this.mapZone.style.maxHeight = width / MapConstrant.WIDTH * MapConstrant.HEIGHT + "px";
-            // } else {
-            //   this.mapZone.style.maxWidth = height / MapConstrant.HEIGHT * MapConstrant.WIDTH + "px";
-            // }
-            // let ratio = this.mapZone.offsetWidth / this.selectedMap.getWidth();
-            // this.selectedMap.components.forEach(component => {
-            //   component.width *= ratio;
-            //   component.height *= ratio;
-            //   component.x *= ratio;
-            //   component.y *= ratio;
-            // });
-            // this.selectedMap.setWidth(this.mapZone.offsetWidth);
-            // this.selectedMap.setHeight(this.mapZone.offsetHeight);
+              this.selectedMap.components.forEach(component => {
+                component.width *= ratioWidth;
+                component.height *= ratioHeight;
+                component.x *= ratioWidth;
+                component.y *= ratioHeight;
+              });
+            }
+
+            console.log("resize", this.selectedMap.currentWidth, this.selectedMap.currentHeight, width, height);
+
+            this.selectedMap.setWidth(width);
+            this.selectedMap.setHeight(width / ratio);
           }, 10)
         }
       }, 10)
@@ -102,13 +107,28 @@ export class RestaurantMapMakerPage {
   }
 
   ionViewDidEnter() {
+    this.mapZone = document.getElementById("map-zone");
+    this.platform.resize.subscribe(() => {
+      this.resizeMap();
+    });
     if (this.navParams.get("mapId")) {
-      let restaurantId = this.navParams.get("restId");
-      let floorId = this.navParams.get("floorId");
       let mapId = this.navParams.get("mapId");
-      this.appController.getMapById(mapId).then(map => {
+      console.log("get map by id", this.restId, mapId);
+      this.appController.getMapById(this.restId, mapId).then(map => {
         this.selectedMap = map;
-        this.showSizeAlert();
+        this.appController.getAllComponentInMap(this.restId, this.selectedMap.id, this.selectedMap.componentFactory).then(data => {
+          this.selectedMap.components = data;
+          if (!(this.selectedMap.realWidth && this.selectedMap.realHeight)) {
+            this.showSizeAlert();
+          } else {
+            this.resizeMap();
+          }
+        }, error => {
+          console.log("error getMapById", error);
+        });
+
+      }, error => {
+        console.log("load map error");
       });
     } else {
       this.appController.setRootPage("BaRestaurantPage");
@@ -277,44 +297,45 @@ export class RestaurantMapMakerPage {
   }
 
   showSizeAlert() {
-    if (!(this.selectedMap.realWidth && this.selectedMap.realHeight)) {
-      let alert = this.alertCtrl.create({
-        message: "Nhập kích thước thực tế của mặt bằng: ",
-        inputs: [
-          {
-            type: "number",
-            placeholder: "Chiều dài"
-          },
-          {
-            type: "number",
-            placeholder: "Chiều rộng"
-          }
-        ],
-        buttons: [
-          {
-            text: "OK",
-            handler: (data) => {
-              if (data[0] > 0 && data[1] > 0) {
-                console.log(data);
-                this.selectedMap.realWidth = +data[0];
-                this.selectedMap.realHeight = +data[1];
-                this.resizeMap();
-              } else {
-                let toast = this.toastCtrl.create({
-                  message: "Kích thước phải là số và lớn hơn 0",
-                  duration: 3000
-                })
-                toast.present();
-                this.showSizeAlert();
-              }
+    console.log("showSizeAlert", this.selectedMap);
+
+    let alert = this.alertCtrl.create({
+      message: "Nhập kích thước thực tế của mặt bằng: ",
+      inputs: [
+        {
+          type: "number",
+          placeholder: "Chiều dài",
+          value: this.selectedMap.realWidth ? this.selectedMap.realWidth + "" : ""
+        },
+        {
+          type: "number",
+          placeholder: "Chiều rộng",
+          value: this.selectedMap.realHeight ? this.selectedMap.realHeight + "" : ""
+        }
+      ],
+      buttons: [
+        {
+          text: "OK",
+          handler: (data) => {
+            if (data[0] > 0 && data[1] > 0) {
+              console.log(data);
+              this.selectedMap.realWidth = +data[0];
+              this.selectedMap.realHeight = +data[1];
+              this.resizeMap();
+            } else {
+              let toast = this.toastCtrl.create({
+                message: "Kích thước phải là số và lớn hơn 0",
+                duration: 3000
+              })
+              toast.present();
+              this.showSizeAlert();
             }
           }
-        ], 
-        enableBackdropDismiss: false
-      });
-      alert.present();
-
-    }
+        }
+      ],
+      enableBackdropDismiss: false
+    });
+    alert.present();
   }
 
   addElementToArray(element: string, array: Array<string>) {
@@ -331,7 +352,22 @@ export class RestaurantMapMakerPage {
     }
   }
 
+  chooseTable() {
+    let modal = this.modalCtrl.create("BaChooseTablePage", { table: this.selectedComponent["table"] });
+    modal.present();
+    modal.onDidDismiss(data => {
+      if (data && data.table) {
+        this.selectedComponent["table"] = {
+          id: data.table.id,
+          name: data.table.name
+        }
+        console.log("selected component", this.selectedComponent);
+      }
+    })
+  }
+
   selectComponent(component: UIComponent) {
+    console.log("select component", component);
     this.selectedComponent = component;
   }
 
@@ -375,7 +411,7 @@ export class RestaurantMapMakerPage {
           type: "text",
           label: "Tiêu đề",
           placeholder: "Tiêu đề",
-          value: this.selectedComponent.title
+          value: this.selectedComponent["table"] ? this.selectedComponent["table"]["name"] : this.selectedComponent.title
         },
         {
           type: "text",
@@ -405,7 +441,7 @@ export class RestaurantMapMakerPage {
 
   copy() {
     let alert = this.alertCtrl.create({
-      title: "Sao chép " + (this.selectComponent.name ? this.selectedComponent.title : this.selectedComponent.type.name),
+      title: "Sao chép " + (this.selectedComponent.title ? this.selectedComponent.title : this.selectedComponent.type.name),
       inputs: [{
         name: "quantily",
         placeholder: "Số lượng (1)",
@@ -517,18 +553,50 @@ export class RestaurantMapMakerPage {
   }
 
   functionButtonClick(button: string) {
+    console.log("button", button);
     if (button == FunctionButtonName.BUTTON_REMOVE) {
+      let alert = this.alertCtrl.create({
+        message: "Bạn có chắc chắn muốn thoát và không lưu thay đổi?",
+        buttons: [{
+          text: "Hủy",
+          role: "cancel"
+        }, {
+          text: "OK",
+          handler: () => {
+            this.appController.setRootPage("BaFloorMapPage", { restId: this.restId, restName: this.restName })
+          }
+        }]
+      })
+      alert.present();
     }
     if (button == FunctionButtonName.BUTTON_CHECK) {
-
+      this.appController.updateMap(this.restId, this.selectedMap.id, {
+        width: this.selectedMap.realWidth,
+        height: this.selectedMap.realHeight,
+        current_width: this.selectedMap.currentWidth,
+        current_height: this.selectedMap.currentHeight
+      })
+      let loading = this.loadingCtrl.create({
+        content: "Xin đợi",
+        dismissOnPageChange: true
+      });
+      loading.present();
+      this.appController.addMapComponent(this.restId, this.selectedMap).then(() => {
+        loading.dismiss();
+        this.appController.setRootPage("BaFloorMapPage", { restId: this.restId, restName: this.restName });
+      }, error => {
+        loading.dismiss();
+        let toast = this.toastCtrl.create({
+          message: "Có lỗi xảy ra, vui lòng thử lại sau",
+          duration: 4000
+        })
+        toast.present();
+      });
     }
     if (button == FunctionButtonName.BUTTON_EDIT) {
       this.showSizeAlert();
     }
-    console.log("map", this.selectedMap);
-    this.appController.setRootPage("BaFloorMapPage", {
-      "restId": this.navParams.get('restId'),
-      "floorId": this.navParams.get('floorId')
-    })
   }
+
+
 }

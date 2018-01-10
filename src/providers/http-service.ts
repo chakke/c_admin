@@ -79,19 +79,19 @@ export class HttpService {
     }
 
     public requestGet(url: string, params: string, options?: RequestOptionsArgs) {
-        this.showProgress();
+        this.progressCtrl.add();
         if (this.mDebugEnable) console.log("request get : " + url + "?" + params);
 
         // return new Promise((success, fail) => {
         //     this.http.get(url + "?" + params, options ? options : { headers: this.mHeader }).subscribe(data => { success(data.json()); }, error => { fail(error.json()); });
         // }); 
         return this.http.get(url + "?" + params, options ? options : { headers: this.mHeader }).finally(() => {
-            this.hideProgress();
+            this.progressCtrl.subtract();
         }).map(data => data.json()).toPromise();
     }
 
     public requestPost(url: string, params: string, options?: RequestOptionsArgs) {
-        this.showProgress();
+        this.progressCtrl.add();
         params = params.replace(/ /g, "%20");
         if (this.mDebugEnable) console.log("request post : " + url + "?" + params);
 
@@ -99,12 +99,12 @@ export class HttpService {
         //     this.http.post(url, params, options ? options : { headers: this.mHeader }).subscribe(data => { success(data.json()); }, error => { fail(error.json()); });
         // });
         return this.http.post(url, params, options ? options : { headers: this.mHeader }).finally(() => {
-            this.hideProgress();
+            this.progressCtrl.subtract();
         }).map(res => { res.json() }).toPromise();
     }
 
     public requestPut(url: string, params: string, options?: RequestOptionsArgs) {
-        this.showProgress();
+        this.progressCtrl.add();
         params = params.replace(/ /g, "%20");
         if (this.mDebugEnable) console.log("request put : " + url + "?" + params);
 
@@ -112,22 +112,10 @@ export class HttpService {
         //     this.http.put(url, params, options ? options : { headers: this.mHeader }).subscribe(data => { success(data.json()); }, error => { fail(error.json()); });
         // });
         return this.http.put(url, params, options ? options : { headers: this.mHeader }).finally(() => {
-            this.hideProgress();
+            this.progressCtrl.subtract();
         }).map(res => { res.json() }).toPromise();
     }
 
-    public showProgress() {
-        this.numberOfRequest++; 
-        this.progressCtrl.show();
-    }
-
-    public hideProgress() {
-        this.numberOfRequest--;
-        if (this.numberOfRequest == 0) { 
-            this.progressCtrl.hide();
-        } else {
-            this.progressCtrl.speedUp();
-        }
-    }
+    
 }
 

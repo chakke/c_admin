@@ -12,6 +12,218 @@
         // To declare rules for a specific mode, create a child rule
         // for the .md, .ios, or .wp mode classes. The mode class is
         // automatically applied to the <body> element in the app.
+        //icon-font
+        @font-face {
+            font-family: 'icomoon';
+            src: url('../assets/bistro-admin/fonts/icomoon.eot?qnd4g8');
+            src: url('../assets/bistro-admin/fonts/icomoon.eot?qnd4g8#iefix') format('embedded-opentype'), url('../assets/bistro-admin/fonts/icomoon.ttf?qnd4g8') format('truetype'), url('../assets/bistro-admin/fonts/icomoon.woff?qnd4g8') format('woff'), url('../assets/bistro-admin/fonts/icomoon.svg?qnd4g8#icomoon') format('svg');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        [class*="icon"][class*="ba-"] {
+            /* use !important to prevent issues with browser extensions that change fonts */
+            font-family: 'icomoon' !important;
+            speak: none;
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+            line-height: 1;
+            /* Better Font Rendering =========== */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        [class*="icon"][class$="ba-id_food_o"]:before {
+            content: "\e926";
+        }
+        
+        [class*="icon"][class$="ba-size_food_o]"]:before {
+            content: "\e927";
+        }
+        
+        [class*="icon"][class$="ba-money_o"]:before {
+            content: "\e928";
+        }
+        
+        [class*="icon"][class$="ba-plus"]:before {
+            content: "\e929";
+        }
+        
+        [class*="icon"][class$="ba-tick"]:before {
+            content: "\e92a";
+        }
+        
+        [class*="icon"][class$="ba-camera_o"]:before {
+            content: "\e92b";
+        }
+        
+        [class*="icon"][class$="ba-stack_o"]:before {
+            content: "\e92c";
+        }
+        
+        [class*="icon"][class$="ba-switch_o"]:before {
+            content: "\e92d";
+        }
+        
+        [class*="icon"][class$="ba-setting-o"]:before {
+            content: "\e92e";
+        }
+        
+        [class*="icon"][class$="ba-cash"]:before {
+            content: "\e922";
+        }
+        
+        [class*="icon"][class$="ba-door"]:before {
+            content: "\e923";
+        }
+        
+        [class*="icon"][class$="ba-stairs"]:before {
+            content: "\e924";
+        }
+        
+        [class*="icon"][class$="ba-wc"]:before {
+            content: "\e925";
+        }
+        
+        [class*="icon"][class$="ba-list-o"]:before {
+            content: "\e91f";
+        }
+        
+        [class*="icon"][class$="ba-map-o"]:before {
+            content: "\e920";
+        }
+        
+        [class*="icon"][class$="ba-order-number-o"]:before {
+            content: "\e921";
+        }
+        
+        [class*="icon"][class$="ba-phone-o"]:before {
+            content: "\e900";
+        }
+        
+        [class*="icon"][class$="ba-food-menu-o"]:before {
+            content: "\e901";
+        }
+        
+        [class*="icon"][class$="ba-menu-o"]:before {
+            content: "\e902";
+        }
+        
+        [class*="icon"][class$="ba-order-o"]:before {
+            content: "\e903";
+        }
+        
+        [class*="icon"][class$="ba-password-o"]:before {
+            content: "\e904";
+        }
+        
+        [class*="icon"][class$="ba-re-pass-o"]:before {
+            content: "\e905";
+        }
+        
+        [class*="icon"][class$="ba-table-3-o"]:before {
+            content: "\e906";
+        }
+        
+        [class*="icon"][class$="ba-bar"]:before {
+            content: "\e907";
+        }
+        
+        [class*="icon"][class$="ba-bell-o"]:before {
+            content: "\e908";
+        }
+        
+        [class*="icon"][class$="ba-book-table-o"]:before {
+            content: "\e909";
+        }
+        
+        [class*="icon"][class$="ba-couple-table"]:before {
+            content: "\e90a";
+        }
+        
+        [class*="icon"][class$="ba-family-table"]:before {
+            content: "\e90b";
+        }
+        
+        [class*="icon"][class$="ba-group-o"]:before {
+            content: "\e90c";
+        }
+        
+        [class*="icon"][class$="ba-home-2-o"]:before {
+            content: "\e90d";
+        }
+        
+        [class*="icon"][class$="ba-individual-o"]:before {
+            content: "\e90e";
+        }
+        
+        [class*="icon"][class$="ba-kitchen"]:before {
+            content: "\e90f";
+        }
+        
+        [class*="icon"][class$="ba-like"]:before {
+            content: "\e910";
+        }
+        
+        [class*="icon"][class$="ba-location-1-o"]:before {
+            content: "\e911";
+        }
+        
+        [class*="icon"][class$="ba-location-2-o"]:before {
+            content: "\e912";
+        }
+        
+        [class*="icon"][class$="ba-logo-dancer"]:before {
+            content: "\e913";
+            color: #000;
+        }
+        
+        [class*="icon"][class$="ba-note-o"]:before {
+            content: "\e914";
+        }
+        
+        [class*="icon"][class$="ba-question-o"]:before {
+            content: "\e915";
+        }
+        
+        [class*="icon"][class$="ba-sale-o"]:before {
+            content: "\e916";
+        }
+        
+        [class*="icon"][class$="ba-service-o"]:before {
+            content: "\e917";
+        }
+        
+        [class*="icon"][class$="ba-shipper-o"]:before {
+            content: "\e918";
+        }
+        
+        [class*="icon"][class$="ba-stairs-o"]:before {
+            content: "\e919";
+        }
+        
+        [class*="icon"][class$="ba-table"]:before {
+            content: "\e91a";
+        }
+        
+        [class*="icon"][class$="ba-table-o"]:before {
+            content: "\e91b";
+        }
+        
+        [class*="icon"][class$="ba-taxi-o"]:before {
+            content: "\e91c";
+        }
+        
+        [class*="icon"][class$="ba-time-o"]:before {
+            content: "\e91d";
+        }
+        
+        [class*="icon"][class$="ba-triangle"]:before {
+            content: "\e91e";
+        }
+        
         .my-modal {
             background-color: #123;
             height: 50%;

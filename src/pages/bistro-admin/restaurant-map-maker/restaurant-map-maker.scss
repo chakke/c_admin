@@ -3,7 +3,8 @@ page-restaurant-map-maker {
         position: absolute;
         left: 16px;
         right: 16px;
-        top: 70px;
+        top: 80px;
+        // top: auto;
         bottom: 16px;
         display: flex;
         overflow-y: auto;
@@ -46,6 +47,18 @@ page-restaurant-map-maker {
             }
             &.dragg-entered {
                 background-color: map-get($map: $BAColors, $key: blue);
+            }
+            .long {
+                position: absolute;
+                top: 0;
+                left: 50%;
+                color: map-get($map: $BAColors, $key: green);
+            }
+            .short {
+                top: 50%;
+                position: absolute;
+                right: 0;
+                color: map-get($map: $BAColors, $key: green);
             }
         }
         .fab-button {

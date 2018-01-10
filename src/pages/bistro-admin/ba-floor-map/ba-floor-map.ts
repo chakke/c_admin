@@ -6,88 +6,56 @@ import { Floor } from "../../../providers/bistro-admin/classes/floor";
 import { Map } from "../../../providers/bistro-admin/classes/map";
 import { FunctionButtonName, FIREBASE_CONST } from "../../../providers/bistro-admin/app-constant"
 
-@IonicPage({ segment: 'ba-floor-map/:restId/:floorId' })
+@IonicPage({ segment: 'ba-floor-map/:restId/:restName' })
 @Component({
   selector: 'page-ba-floor-map',
   templateUrl: 'ba-floor-map.html',
 })
 export class BaFloorMapPage {
-  selectedRestaurant: Restaurant;
-  selectedFloor: Floor;
-  floors: Array<Floor> = [];
+  restId: string = "";
+  restName: string = "";
   maps: Array<Map> = [];
-  restId = "bistro";
-  floorId = 1;
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public appController: AppControllerProvider, public alertCtrl: AlertController) {
-  }
-
-  ionViewDidEnter() {
-    let restId = this.navParams.get("restId");
-    let floorId = this.navParams.get("floorId");
-    //fixed data
-    restId = "bistro";
-
-    if (restId && floorId) {
-      this.appController.fetchMapInRestaurant(restId).subscribe(data => {
-        data.docChanges.forEach(change => {
-          let mapData = change.doc.data();
-          if (change.type == FIREBASE_CONST.DOCUMENT_CHANGE_TYPE.ADD) {
-            let map = new Map(mapData.id, mapData.floor_id, mapData.title, [], 0, mapData.width, mapData.height);
-            this.maps.push(map);
-          }
-          if (change.type == FIREBASE_CONST.DOCUMENT_CHANGE_TYPE.MODIFY) {
-            let index = this.maps.findIndex(elm => {
-              return elm.id == mapData.id;
-            })
-            if (index > -1) {
-              this.maps[index].mappingFirebaseData(mapData);
-            }
-          }
-          if (change.type == FIREBASE_CONST.DOCUMENT_CHANGE_TYPE.REMOVE) {
-            let index = this.maps.findIndex(elm => {
-              return elm.id == mapData.id;
-            })
-            if (index > -1) {
-              this.maps.splice(index, 1);
-            }
-          }
-        });
-      })
-      // this.appController.getRestauranById(restId).then(data => {
-      //   this.selectedRestaurant = data;
-      //   this.appController.getFloorsInRestaurant(restId).then(floors => {
-      //     this.floors = floors;
-      //     if (this.floors && this.floors.length > 0) { 
-      //       let index = this.floors.findIndex(elm => {
-      //         return elm.id == floorId;
-      //       }); 
-      //       if (index > -1) {
-      //         this.selectedFloor = this.floors[index];
-      //       } else {
-      //         this.selectedFloor = this.floors[0];
-      //       }
-      //       this.getMaps();
-      //     } else {
-      //       this.appController.setRootPage("BaRestaurantPage");
-      //     }
-      //   }, floorsError => { 
-      //   })
-      // }, error => { 
-      // })
-    } else {
-      this.appController.setRootPage("BaRestaurantPage");
+    if (this.navParams.get("restId")) {
+      this.restId = this.navParams.get("restId");
+    }
+    if (this.navParams.get("restName")) {
+      this.restName = this.navParams.get("restName");
     }
   }
 
-  getMaps() {
-    this.appController.getMapInFloor(this.selectedFloor.id).then(maps => {
-      this.maps = maps;
-    });
+  ionViewDidLoad() {
+    this.loadMaps();
   }
 
-  selectFloor(floor: Floor) {
-    this.selectedFloor = floor;
+  loadMaps() {
+    this.appController.fetchMapInRestaurant(this.restId).subscribe(data => {
+      data.docChanges.forEach(change => {
+        let mapData = change.doc.data();
+        if (change.type == FIREBASE_CONST.DOCUMENT_CHANGE_TYPE.ADD) {
+          let map = new Map();
+          map.mappingFirebaseData(mapData);
+          this.maps.push(map);
+        }
+        if (change.type == FIREBASE_CONST.DOCUMENT_CHANGE_TYPE.MODIFY) {
+          let index = this.maps.findIndex(elm => {
+            return elm.id == mapData.id;
+          })
+          if (index > -1) {
+            this.maps[index].mappingFirebaseData(mapData);
+          }
+        }
+        if (change.type == FIREBASE_CONST.DOCUMENT_CHANGE_TYPE.REMOVE) {
+          let index = this.maps.findIndex(elm => {
+            return elm.id == mapData.id;
+          })
+          if (index > -1) {
+            this.maps.splice(index, 1);
+          }
+        }
+      });
+    })
   }
 
   edit(map: Map) {
@@ -161,7 +129,9 @@ export class BaFloorMapPage {
             text: "OK",
             handler: (data) => {
               if (data && data.name) {
-                this.appController.addMapToRestaurant(this.restId, new Map("", this.floorId + "", data["name"], [], 0)).then(() => {
+                let map = new Map();
+                map.title = data.name;
+                this.appController.addMapToRestaurant(this.restId, map).then(() => {
                   console.log("Thêm map thành công");
                 });
               }
@@ -175,9 +145,9 @@ export class BaFloorMapPage {
 
   gotoMapMaker(map: Map) {
     this.appController.pushPage("RestaurantMapMakerPage", {
+      mapId: map.id,
       restId: this.restId,
-      floorId: this.floorId,
-      mapId: map.getId()
+      restName: this.restName
     });
   }
 }

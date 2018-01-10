@@ -4,7 +4,7 @@
 
 <ion-content>
     <div class="ba-content">
-        <ba-title [title]="'Sơ đồ nhà hàng'"></ba-title>
+        <ba-title [title]="'Sơ đồ nhà hàng ' + restName + ': ' + selectedMap.title"></ba-title>
         <div class="main-controls">
             <ba-buttons-function [showButton]="{buttonRemove: true, buttonCheck: true, buttonEdit: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
         </div>
@@ -25,6 +25,9 @@
                     <button class="btn btn-success" (click)="edit()">
                         <i class="fa fa-pencil" aria-hidden="true"></i>
                     </button>
+                    <button class="btn btn-info" (click)="chooseTable()" *ngIf="selectedComponent.type.type == 'table'">
+                        <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                    </button>
                     <button class="btn btn-primary" (click)="rotate()">
                         <i class="fa fa-repeat" aria-hidden="true"></i>
                     </button>
@@ -43,7 +46,7 @@
                     <ion-list class="component-detail" no-lines>
                         <ion-item>
                             <ion-label class="ba-small bold" item-left>Tiêu đề:</ion-label>
-                            <ion-label item-right>{{selectedComponent.title || selectedComponent.typeName}}</ion-label>
+                            <ion-label item-right>{{selectedComponent.table ? selectedComponent.table.name : (selectedComponent.title || selectedComponent.typeName)}}</ion-label>
                         </ion-item>
                         <ion-item>
                             <ion-label class="ba-small bold" item-left>Kích thước:</ion-label>
@@ -61,12 +64,14 @@
                 </div>
             </div>
             <div class="right-side-bar col-md-9  col-sm-12" id="map-zone">
+                <span class="long">{{longSize}}</span>
+                <span class="short">{{shortSize}}</span>
                 <div [ngClass]="component.classList" *ngFor="let component of selectedMap.components; let i = index" [attr.index]="i" [style.transform]="domSanitizer.bypassSecurityTrustStyle('translate(' + component.x + 'px,' + component.y + 'px) ' + 'rotateZ('+ component.rotate +'deg)')"
                     [style.webkitTransform]="domSanitizer.bypassSecurityTrustStyle('translate(' + component.x + 'px,' + component.y + 'px) ' + 'rotateZ('+ component.rotate +'deg)')" [attr.data-x]="component.x" [attr.data-y]="component.y" [style.width]="component.width + 'px'"
                     [style.height]="component.height + 'px'" [style.zIndex]="component.zIndex" (click)="selectComponent(component)" [class.selected]="selectedComponent && selectedComponent.id == component.id">
                     <div class="title">
                         <span> 
-                            {{component.title}}
+                            {{component.table ? component.table.name : component.title}}
                         </span>
                     </div>
                     <div class="content" [innerHTML]="component.innerHtml"></div>

@@ -12,8 +12,11 @@ import { FirebaseServiceProvider } from '../../../providers/bistro-admin/firebas
   templateUrl: 'ba-restaurant-map.html',
 })
 export class BaRestaurantMapPage {
+  restaurantName: string = "";
+  restaurantId: string = "";
+  isLoadDataSuccessfully = false;
   restaurants: Array<Restaurant> = [];
-  selectedRestaurant: Restaurant;
+  selectedRestaurant: Restaurant; 
   maxLength = 15;
   floors: Array<Floor> = [];
 
@@ -24,15 +27,7 @@ export class BaRestaurantMapPage {
     public alertCtrl: AlertController) {
   }
 
-  ionViewDidEnter() {
-    this.restaurants = this.appController.getRestauranController().getAllRestaurant();
-    if (this.restaurants.length > this.maxLength)
-      this.restaurants.splice(this.maxLength, this.restaurants.length - this.maxLength);
-    this.appController.getRestauranController().dataChange.subscribe(data => {
-      this.restaurants = data;
-      if (this.restaurants.length > this.maxLength)
-        this.restaurants.splice(this.maxLength, this.restaurants.length - this.maxLength);
-    });
+  ionViewDidEnter() {      
 
     if (this.navParams.get("id")) {
       let restaurantId = this.navParams.get("id");
@@ -54,10 +49,10 @@ export class BaRestaurantMapPage {
   }
 
   loadFloor() {
-    this.appController.getFloorsInRestaurant(this.selectedRestaurant.id).then(data => {
-      this.floors = data;
-    }, error => {
-    });
+    // this.appController.getFloorsInRestaurant(this.selectedRestaurant.id).then(data => {
+    //   this.floors = data;
+    // }, error => {
+    // });
   }
 
 
@@ -83,9 +78,9 @@ export class BaRestaurantMapPage {
           text: "OK",
           handler: (data) => {
             if (data && data.name) {
-              let floor = new Floor(1, this.selectedRestaurant.id, data.name);
-              this.floors.push(floor);
-              this.selectedRestaurant.floors.push(floor);
+              // let floor = new Floor(1, this.selectedRestaurant.id, data.name);
+              // this.floors.push(floor);
+              // this.selectedRestaurant.floors.push(floor);
             }
           }
         }

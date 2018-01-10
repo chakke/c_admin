@@ -7,7 +7,9 @@ import { ProgressControllerProvider } from '../../../providers/bistro-admin/prog
   templateUrl: 'ba-progress.html'
 })
 export class BaProgressComponent {
-  progress = 0;
+  numberOfProgress = 0; //Number ò request at a time
+  progressTimeOut = 10000; //Timeout for the life of progress. If out of time, it must be go to hell;
+  progress = 0; //Progress 0-100
   timePerequest = 3 //(ms) Add or  remove request will add or minus debounceTime
   debounceTime = 3; //each debounceTime(ms) increase progress by percentPerTime;
   percentPerTime = 0.1;
@@ -23,52 +25,64 @@ export class BaProgressComponent {
     this.subscription = this.progressCtrl.loaderState
       .subscribe((event) => {
         switch (event) {
-          case "show": this.showProgress(); break;
-          case "hide": this.hideProgress(); break;
-          case "speedUp": this.speedUpProgress(); break;
+          case "add": this.addProgress(); break;
+          case "subtract": this.subtractProgress(); break;
         }
       });
   }
+
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
-  showProgress() {
+  addProgress() {
     if (this.timeOut) {
       clearTimeout(this.timeOut);
       this.animating = false;
     }
+    this.timeOut = setTimeout(() => {
+      //Set time out to destroy progress
+      //set number of request to 1
+      this.numberOfProgress = 1;
+      //subtract to destroy
+      this.subtractProgress();
+    }, this.progressTimeOut)
     if (this.isShowProgress) {
       this.debounceTime += this.timePerequest;
     }
     this.isShowProgress = true;
+    this.numberOfProgress++;
     if (this.interval) clearInterval(this.interval);
     this.interval = setInterval(() => {
       if (this.progress < 95)
-        this.progress += this.percentPerTime; 
-    }, this.debounceTime)
+        this.progress += this.percentPerTime;
+    }, this.debounceTime);
   }
 
-  hideProgress() {
+  subtractProgress() {
     if (this.interval) clearInterval(this.interval);
-    this.animating = true;
-    this.progress = 100;
-    if (this.timeOut) clearTimeout(this.timeOut);
-    this.timeOut = setTimeout(() => {
-      this.isShowProgress = false;
-      this.progress = 0;
-      this.animating = false;
-    }, 100)
+    this.numberOfProgress--;
+    if (this.numberOfProgress <= 0) {
+      this.numberOfProgress == 0;
+      //all request are done
+      this.animating = true;
+      this.progress = 100;
+      if (this.timeOut) clearTimeout(this.timeOut);
+      this.timeOut = setTimeout(() => {
+        this.isShowProgress = false;
+        this.progress = 0;
+        this.animating = false;
+      }, 300)
+    } else {
+      //Speedup progress
+      this.debounceTime -= this.timePerequest;
+      if (this.debounceTime < this.timePerequest) this.debounceTime = this.timePerequest;
+      this.interval = setInterval(() => {
+        if (this.progress < 95)
+          this.progress += this.percentPerTime;
+      }, this.debounceTime)
+    }
   }
 
-  speedUpProgress() {
-    if (this.interval) clearInterval(this.interval);
-    this.debounceTime -= this.timePerequest;
-    if (this.debounceTime < this.timePerequest) this.debounceTime = this.timePerequest;
-    this.interval = setInterval(() => {
-      if (this.progress < 95)
-        this.progress += this.percentPerTime; 
-    }, this.debounceTime)
-  }
 
 }

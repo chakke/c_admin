@@ -11,7 +11,7 @@ import { ProvinceControllerProvider } from '../province-controller/province-cont
 import { Restaurant } from '../classes/restaurant';
 
 import { Config } from '../classes/config';
-import { AssetsUrl } from '../app-constant';
+import { AssetsUrl, FIREBASE_CONST } from '../app-constant';
 
 import { Toast, ToastController, App } from 'ionic-angular';
 import 'rxjs/add/operator/map';
@@ -19,6 +19,10 @@ import { Floor } from '../classes/floor';
 import { Map } from '../classes/map';
 import { FirebaseServiceProvider } from '../firebase-service/firebase-service';
 import { Observable } from 'rxjs/Observable';
+import { ComponentFactory } from '../factories/component-factory/component-factory';
+import { UIComponent } from '../classes/ui-component';
+import { Mappingable } from '../interface/mappingable';
+import { Staff } from '../classes/staff';
 @Injectable()
 export class AppControllerProvider {
 
@@ -41,7 +45,6 @@ export class AppControllerProvider {
     this.resourceLoader = new ResourceLoader();
     this.config = new Config();
     this.loadConfig().then(() => {
-
       this.menuItems = this.config.getData(["menu-items"]);
       if (this.menuItemChangeHandler) {
         this.menuItemChangeHandler(this.menuItems);
@@ -49,6 +52,26 @@ export class AppControllerProvider {
       this.loadProvince();
       this.loadUser();
     });
+  }
+
+  showToast(message: string, duration?: number, position?: string) {
+    if (this.toast) {
+      this.toast.dismiss();
+    }
+    this.toast = this.toastCtrl.create({
+      message: message,
+      duration: duration ? duration : 3000,
+      position: position ? position : "bottom"
+    });
+    this.toast.present();
+    this.toast.onDidDismiss(() => {
+      this.toast = null;
+    })
+  }
+  hideToast() {
+    if (this.toast) {
+      this.toast.dismiss();
+    }
   }
 
   loadConfig() {
@@ -128,6 +151,33 @@ export class AppControllerProvider {
     }
   }
 
+  mappingFirebaseData<T extends Mappingable>(array: Array<T>, data: any, type: (new () => T)) {
+    data.docChanges.forEach(change => {
+      let elementData = change.doc.data();
+      if (change.type == FIREBASE_CONST.DOCUMENT_CHANGE_TYPE.ADD) {
+        let element = new type();
+        element.mappingFirebaseData(elementData);
+        array.push(element);
+      }
+      if (change.type == FIREBASE_CONST.DOCUMENT_CHANGE_TYPE.MODIFY) {
+        let index = array.findIndex(elm => {
+          return elm.id == elementData.id;
+        })
+        if (index > -1) {
+          array[index].mappingFirebaseData(elementData);
+        }
+      }
+      if (change.type == FIREBASE_CONST.DOCUMENT_CHANGE_TYPE.REMOVE) {
+        let index = array.findIndex(elm => {
+          return elm.id == elementData.id;
+        })
+        if (index > -1) {
+          array.splice(index, 1);
+        }
+      }
+    });
+  }
+
   loadUser() {
     this.user = new User("B-Gate", "bgate@gmail.com", "0969696969", "69 Trần Duy Hưng, Cầu Giấy, Hà Nội", "123456");
     this.loadVendor();
@@ -171,23 +221,6 @@ export class AppControllerProvider {
     return this.restaurantController;
   }
 
-  getFloorsInRestaurant(restId: number): Promise<Array<Floor>> {
-    return new Promise((resolve, reject) => {
-      this.httpService.getFloorInRestaurant(restId).then(data => {
-        let floors: Array<Floor> = [];
-        if (data && data.content) {
-          data.content.forEach(element => {
-            let floor = this.restaurantController.getFloorFromData(element);
-            floors.push(floor);
-          });
-          resolve(floors);
-        }
-        else {
-          reject();
-        }
-      })
-    })
-  }
 
   getMapInFloor(floorId: number): Promise<Array<Map>> {
     return new Promise((resolve, reject) => {
@@ -206,20 +239,6 @@ export class AppControllerProvider {
       })
     })
   }
-
-  getMapById(mapId: number): Promise<Map> {
-    return new Promise((resolve, reject) => {
-      this.httpService.getMapById(mapId).then(data => {
-        if (data && data.content) {
-          resolve(this.restaurantController.getMapFromData(data.content));
-        }
-        else {
-          reject();
-        }
-      })
-    })
-  }
-
 
   deleteFloor(id: number): Promise<boolean> {
     return new Promise((resolve, reject) => {
@@ -244,6 +263,24 @@ export class AppControllerProvider {
     return this.provinceController;
   }
 
+  getAllMapInRestaurant(restId: string): Promise<Array<Map>> {
+    return new Promise((resolve, reject) => {
+      this.firebaseService.getAllMapInRestaurant(restId).then(data => {
+        let result = [];
+        if (data) {
+          data.forEach(element => {
+            let map = new Map();
+            map.mappingFirebaseData(element);
+            result.push(map);
+          });
+          resolve(result);
+        }
+      }, error => {
+        reject(error);
+      })
+    })
+  }
+
   fetchMapInRestaurant(restId: string): Observable<any> {
     return this.firebaseService.fetchAllMapInRestaurant(restId);
   }
@@ -258,5 +295,196 @@ export class AppControllerProvider {
 
   updateMap(restId, mapId: string, value: any) {
     return this.firebaseService.updateMap(restId, mapId, value);
+  }
+
+  getMapById(restId: string, mapId: string): Promise<Map> {
+    return new Promise((resolve, reject) => {
+      this.firebaseService.getMapById(restId, mapId).then(data => {
+        if (data) {
+          let map = new Map();
+          map.mappingFirebaseData(data);
+          resolve(map);
+        } else {
+          reject();
+        }
+      }, error => {
+        reject(error);
+      })
+    })
+  }
+
+  addMapComponent(restId: string, map: Map): Promise<any> {
+    return new Promise((resolve, reject) => {
+      //First delete all exits data in map components
+      this.firebaseService.getAllComponentInMap(restId, map.id).then(data => {
+        if (data && data.length > 0) {
+          let deleteProcess = [];
+          data.forEach(componentData => {
+            deleteProcess.push(this.firebaseService.deleteComponentInMap(restId, map.id, componentData.id));
+          });
+          Promise.all(deleteProcess).then(() => {
+            //Add new components
+            let addProcess = [];
+            map.components.forEach(component => {
+              addProcess.push(this.firebaseService.addComponentToMap(restId, map.id, component));
+            });
+            Promise.all(addProcess).then(() => {
+              resolve();
+            }, error => {
+              reject(error);
+            });
+          })
+        } else {
+          //Add new components
+          let addProcess = [];
+          map.components.forEach(component => {
+            addProcess.push(this.firebaseService.addComponentToMap(restId, map.id, component));
+          });
+          Promise.all(addProcess).then(() => {
+            resolve();
+          }, error => {
+            reject(error);
+          });
+        }
+      })
+    })
+
+  }
+
+  getAllAreaInRestaurant(restId: string): Promise<Array<any>> {
+    return new Promise((resolve, reject) => {
+      this.firebaseService.getAllAreaInRestaurant(restId).then(data => {
+        if (data && data.length > 0) {
+          let areas = [];
+          data.forEach(areaData => {
+            areas.push({ id: areaData.id, name: areaData.name })
+          });
+          resolve(areas);
+        } else {
+          resolve([]);
+        }
+      }, error => {
+        reject(error);
+      })
+    })
+  }
+  getAllTableInRestaurant(restId: string): Promise<Array<any>> {
+    return new Promise((resolve, reject) => {
+      this.firebaseService.getAllTableInRestaurant(restId).then(data => {
+        if (data && data.length > 0) {
+          let tables = [];
+          data.forEach(tableData => {
+            let table = {
+              id: tableData.id,
+              name: tableData.name,
+              areaId: tableData.area_id,
+              areaName: tableData.area_name,
+              capacity: tableData.capacity,
+              type: tableData.type
+            }
+            tables.push(table);
+          });
+          resolve(tables);
+        } else {
+          resolve([]);
+        }
+      }, error => {
+        reject(error);
+      })
+    })
+  }
+
+  getAllComponentInMap(restId: string, mapId: string, componentFactory: ComponentFactory): Promise<Array<UIComponent>> {
+    return new Promise((resolve, reject) => {
+      this.firebaseService.getAllComponentInMap(restId, mapId).then(data => {
+        if (data && data.length > 0) {
+          let components = [];
+          data.forEach(componentData => {
+            let component = componentFactory.getComponent(componentData.id, componentData.type.type, componentData.title,
+              componentData.x, componentData.y, componentData.width, componentData.height,
+              componentData.z_index, componentData.rotate);
+            component["table"] = componentData.table;
+            components.push(component);
+          });
+          resolve(components);
+        } else {
+          resolve([]);
+        }
+      }, error => {
+        reject(error);
+      })
+    })
+  }
+
+  getAllRestaurantInVendor(vendorId: string): Promise<Array<Restaurant>> {
+    return new Promise((resolve, reject) => {
+      this.firebaseService.getAllRestaurantInVendor(vendorId).then(data => {
+        let result = [];
+        if (data) {
+          data.forEach(element => {
+            let restaurant = new Restaurant();
+            restaurant.mappingFirebaseData(element);
+            result.push(restaurant);
+          });
+        }
+        resolve(result);
+      }, error => {
+        reject(error);
+      });
+    })
+  }
+
+  fetchStaffInRestaurant(restId: string): Observable<any> {
+    return this.firebaseService.fetchAllStaffInRestaurant(restId);
+  }
+
+  getStaffByEmail(restId: string, email: string): Promise<Array<Staff>> {
+    return new Promise((resolve, reject) => {
+      this.firebaseService.getStaffByEmail(restId, email).then(data => {
+        let result = [];
+        if (data) {
+          data.forEach(element => {
+            let staff = new Staff();
+            staff.mappingFirebaseData(element);
+            result.push(staff);
+          });
+          resolve(result);
+        }
+      }, error => {
+        reject(error);
+      })
+    })
+  }
+
+  addStaffToRestaurant(restId: string, staff: Staff) {
+    return this.firebaseService.addStaffToRestaurant(restId, staff);
+  }
+
+  createUserWithEmailAndPassword(email: string) {
+    return this.firebaseService.createUserWithEmailAndPassword(email);
+  }
+
+  getStaffById(restId: string, staffId: string): Promise<Staff> {
+    return new Promise((resolve, reject) => {
+      this.firebaseService.getStaffById(restId, staffId).then(data => {
+        if (data) {
+          let staff = new Staff();
+          staff.mappingFirebaseData(data);
+          resolve(staff);
+        } else {
+          reject();
+        }
+      }, error => {
+        reject(error);
+      })
+    })
+  }
+
+  updateStaff(restId: string, staffId: string, value: any){
+    return this.firebaseService.updateStaff(restId, staffId, value);
+  }
+
+  deleteStaff(restId: string, staffId: string){
+    return this.firebaseService.deleteStaff(restId, staffId);
   }
 }

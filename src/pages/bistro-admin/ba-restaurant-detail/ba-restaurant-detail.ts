@@ -27,10 +27,10 @@ export class BaRestaurantDetailPage {
     if (this.navParams.get("id")) {
       this.appController.getRestauranById(this.navParams.get("id")).then(restaurant => {
         this.restaurant = restaurant; 
-        if (this.restaurant.image) {
-          let lastIndex = this.restaurant.image.lastIndexOf("/");
+        if (this.restaurant.logo) {
+          let lastIndex = this.restaurant.logo.lastIndexOf("/");
           if (lastIndex > -1) {
-            this.logoName = this.restaurant.image.substring(lastIndex + 1, this.restaurant.image.length);
+            this.logoName = this.restaurant.logo.substring(lastIndex + 1, this.restaurant.logo.length);
           } else {
             this.logoName = "";
           }
@@ -38,7 +38,7 @@ export class BaRestaurantDetailPage {
       });
     }
     else { 
-      this.restaurant = new Restaurant(0,this.appController.getVendor(),"","");
+      this.restaurant = new Restaurant();
     }
   }
 
@@ -50,7 +50,7 @@ export class BaRestaurantDetailPage {
         if (btnSelectImage.files && btnSelectImage.files[0]) {
           let reader = new FileReader();
           reader.onload = (event) => {
-            this.restaurant.image = (<any>event.target).result;
+            this.restaurant.logo = (<any>event.target).result;
             this.logoName = btnSelectImage.files[0].name;
           }
           reader.readAsDataURL(btnSelectImage.files[0]);
@@ -67,7 +67,7 @@ export class BaRestaurantDetailPage {
 
   removeLogo() {
     if (this.restaurant)
-      this.restaurant.image = "";
+      this.restaurant.logo = "";
     this.logoName = "Chưa chọn ảnh nào";
   }
 

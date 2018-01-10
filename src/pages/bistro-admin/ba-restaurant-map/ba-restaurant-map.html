@@ -4,8 +4,7 @@
 
 <ion-content>
     <div class="ba-content">
-        <ba-title [title]="'Quản lý sơ đồ'"></ba-title>
-
+        <ba-title [title]="'Quản lý sơ đồ nhà hàng ' + restaurantName"></ba-title>
         <div class="main-controls">
             <ba-buttons-function [showButton]="{buttonAdd: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
         </div>

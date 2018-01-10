@@ -1,0 +1,88 @@
+<ion-header>
+    <ba-header></ba-header>
+</ion-header>
+
+
+<ion-content>
+    <div class="ba-content">
+        <ba-title [title]="title"></ba-title>
+        <ba-buttons-function [showButton]="{buttonRemove: true, buttonCheck: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
+        <div class="ba-section" *ngIf="restaurant">
+            <div class="section-body">
+                <div class="form-group ba-form-group ba-avatar-upload">
+                    <div class="avatar">
+                        <img src="{{restaurant.image || defaultLogo}}" alt="">
+                    </div>
+                    <div class="file-name">
+                        {{logoName}}
+                    </div>
+                    <div class="button-groups">
+                        <button class="btn" [ngClass]='{"btn-default": !restaurant.image, "btn-danger": restaurant.image}' (click)="removeLogo()">
+                          <i class="fa fa-times"></i>
+                      </button>
+                        <div class="upload-button">
+                            <label for="selectImageBtn" class="ba-link btn btn-primary"> 
+                                      <i class="fa fa-file-image-o "></i> 
+                                  </label>
+                            <input type="file" id="selectImageBtn" name="selectImageBtn" accept="image/*" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group ba-form-group">
+                    <label for="restaurant-name">Tên nhà hàng:</label>
+                    <input type="text" name="restaurant-name" [(ngModel)]="restaurant.name" class="form-control">
+                </div>
+                <div class="form-group ba-form-group">
+                    <label for="restaurant-desc">Mô tả ngắn gọn:</label>
+                    <textarea spellcheck="false" [(ngModel)]="restaurant.description" spellcheck="false" class="form-control" name="restaurant-desc" id="restaurant-desc" value="restaurant.description"> </textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group ba-form-group">
+                            <label for="restaurant-email">Email:</label>
+                            <input type="text" name="restaurant-email" class="form-control" [(ngModel)]="restaurant.email">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group ba-form-group">
+                            <label for="restaurant-phone">Điện thoại: </label>
+                            <input type="text" name="restaurant-phone" class="form-control" [(ngModel)]="restaurant.phone">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group ba-form-group">
+                    <label for="restaurant-address">Địa chỉ:</label>
+                    <input type="text" name="restaurant-address" [(ngModel)]="restaurant.address" class="form-control">
+                </div>
+                <div class="form-group ba-form-group">
+                    <label for="provinces">Tỉnh thành:</label>
+                    <select name="provinces" id="provinces" class="form-control">
+                      <option class="dropdown-item" selected="true" value="1">Hà Nội</option>
+                      <option class="dropdown-item" value="2">Thái Nguyên</option>
+                      <option class="dropdown-item" value="3">Đà Nẵng</option>
+                      <option class="dropdown-item" value="4">TP Hồ Chí Minh</option>
+                  </select>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group ba-form-group flexbox-center-cross">
+                            <label for="restaurant-offerDelivery">Cho phép gọi đặt ship:</label>
+                            <ion-toggle class="toggle-ios" [class.toggle-md]="false"></ion-toggle>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group ba-form-group flexbox-center-cross">
+                            <label for="restaurant-offerCollection">Cho phép goi món trước: </label>
+                            <ion-toggle class="toggle-ios" [class.toggle-md]="false"></ion-toggle>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group ba-form-group">
+                    <label for="restaurant-deliverTime">Thời gian giao hàng: </label>
+                    <input type="text" name="restaurant-deliverTime" [(ngModel)]="restaurant.deliverTime" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ion-content>

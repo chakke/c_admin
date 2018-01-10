@@ -5,7 +5,7 @@ import { ComponentType } from '../app-constant';
 
 
 export class UIComponent {
-    id: number;
+    id: string;
     title: string;
     type: IComponentType;
     classList: Array<string> = [];
@@ -17,7 +17,7 @@ export class UIComponent {
     zIndex = 10;
     rotate: number = 0;
     constructor(id?: number, title?: string, x?: number, y?: number, width?: number, height?: number, zIndex?: number, rotate?: number) {
-        this.id = id;
+        this.id = Date.now() + "-" + id;
         this.type = ComponentType.UI_COMPONENT;
         this.classList.push("map-symbol");
         this.innerHtml = "";

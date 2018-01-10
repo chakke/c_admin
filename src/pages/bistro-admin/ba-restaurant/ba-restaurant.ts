@@ -12,6 +12,8 @@ import { FunctionButtonName } from '../../../providers/bistro-admin/app-constant
 })
 export class BaRestaurantPage {
   restaurants: Array<Restaurant> = [];
+  vendorId = "";
+  isDataLoadedSucessfully = false;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -19,19 +21,17 @@ export class BaRestaurantPage {
   }
 
   ionViewDidLoad() {
-    this.restaurants = this.appController.getRestauranController().getAllRestaurant();
-    if (this.restaurants.length > 30)
-      this.restaurants.splice(30, this.restaurants.length - 30);
-    this.appController.getRestauranController().dataChange.subscribe(data => {
+    this.appController.getAllRestaurantInVendor(this.vendorId).then(data => {
       this.restaurants = data;
-      if (this.restaurants.length > 30)
-        this.restaurants.splice(30, this.restaurants.length - 30);
-    });
+      this.isDataLoadedSucessfully = true;
+    }, error => {
+
+    })
   }
 
   functionButtonClick(button) {
     if (button == FunctionButtonName.BUTTON_ADD) {
-      this.appController.pushPage("BaRestaurantDetailPage");
+      this.appController.pushPage("BaAddRestaurantPage");
     }
   }
 
@@ -49,7 +49,7 @@ export class BaRestaurantPage {
 
   }
 
-  gotoMap(restaurantId: number){
-    this.appController.pushPage("BaRestaurantMapPage", {id: restaurantId});
+  gotoMap(restaurant: Restaurant) {
+    this.appController.pushPage("BaFloorMapPage", { restId: restaurant.id, restName: restaurant.name });
   }
 }

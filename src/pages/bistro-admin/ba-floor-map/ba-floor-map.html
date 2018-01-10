@@ -5,8 +5,7 @@
 
 <ion-content>
     <div class="ba-content">
-        <ba-title [title]="'Quản lý sơ đồ'"></ba-title>
-
+        <ba-title [title]="'Quản lý sơ đồ nhà hàng ' + restName"></ba-title>
         <div class="main-controls">
             <ba-buttons-function [showButton]="{buttonAdd: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
         </div>
@@ -15,7 +14,7 @@
                 <div class="form-group ba-form-group" *ngIf="selectedRestaurant">
                     <label>Nhà hàng: </label> <span>{{selectedRestaurant.name}}</span>
                 </div>
-                <div class="form-group ba-form-group">
+                <!-- <div class="form-group ba-form-group">
                     <label for="restaurant">Tầng:</label>
                     <div class="btn-group group-dropdown">
                         <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -25,7 +24,7 @@
                             <span class="dropdown-item" *ngFor="let floor of floors" (click)="selectFloor(floor)">{{floor.name}}</span>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="section-body">
                 <div class="map-item col-sm-6 col-xs-12" *ngFor="let map of maps">

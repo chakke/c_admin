@@ -68,7 +68,7 @@ export class FunctionButtonName {
     public static BUTTON_CHECK: string = "buttonCheck";
 }
 
-import { IComponentType } from "../bistro-admin/interface/i-component-type"; 
+import { IComponentType } from "../bistro-admin/interface/i-component-type";
 export class ComponentType {
     public static UI_COMPONENT: IComponentType = {
         type: "component",
@@ -118,8 +118,12 @@ export class MapConstrant {
 }
 
 export const FIREBASE_PATH = {
-    RESTAURANT: "restaurants" ,
-    MAP: "maps"   
+    RESTAURANT: "restaurants",
+    MAP: "maps",
+    COMPONENT: "components",
+    AREA: "areas",
+    TABLE: "tables",
+    STAFF: "staffs"
 }
 export const FIREBASE_CONST = {
     DOCUMENT_CHANGE_TYPE: {
@@ -128,3 +132,48 @@ export const FIREBASE_CONST = {
         REMOVE: "removed"
     }
 }
+
+export const STAFF_ROLE = {
+    CHEF: 1,
+    BAR: 8,
+    WAITER: 2,
+    ORDER: 3,
+    RECEPTIONIST: 4,
+    MANAGER: 5,
+    SUPERVISOR: 6,
+    SECURITY: 7
+}
+
+export const STAFF_ROLE_NAME = {
+    1: "Đầu bếp",
+    8: "Bartender",
+    2: "Nhân viên chạy bàn",
+    3: "Nhân viên ghi order",
+    4: "Thu ngân",
+    5: "Quản lý",
+    6: "Quản lý cấp cao",
+    7: "Bảo vệ"
+}
+
+
+export const STAFF_STATE = {
+    ACTIVE: 0,
+    UNACTIVE: 1,
+    BLOCKED: 2
+}
+
+export const STAFF_TYPE = {
+    PARTIME: 0,
+    FULLTIME: 1,
+    ONETIME: 2
+}
+
+export const STAFF_TYPE_NAME = {
+    0: "Full time",
+    1: "Partime time",
+    2: "Thời vụ"
+}
+
+
+
+

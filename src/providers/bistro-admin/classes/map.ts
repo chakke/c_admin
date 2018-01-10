@@ -1,59 +1,62 @@
 import { UIComponent } from "./ui-component";
 import { ComponentFactory } from "../factories/component-factory/component-factory";
 export class Map {
-    public id: string;
-    public floorId: string;
-    public title: string;
     components: Array<UIComponent> = [];
-    public realWidth: number = 0;
-    public realHeight: number = 0;
     public componentFactory: ComponentFactory;
-    public numberOfElement: any = {};
-    public currentWidth: number = 0;
-    public currentHeight: number = 0;
+    currentHeight: number;
+    currentWidth: number;
+    firebaseId = "";
+    floorId = "";
+    realHeight: number;
+    realWidth: number;
+    id = "";
+    title = "";
+    numberOfElement: any;
 
-    constructor(id: string, floorId: string, title: string, components: Array<UIComponent>, numberOfElement?: number, realWidth?: number, realHeight?: number) {
-        this.id = id;
-        this.floorId = floorId;
-        this.title = title;
-        this.numberOfElement = (numberOfElement ? numberOfElement : {});
-        this.components = components ? components : [];
-        this.componentFactory = new ComponentFactory();
-        this.realWidth = realWidth ? realWidth : 0;
-        this.realHeight = realHeight ? realHeight : 0;
+    constructor() {
+        this.reset();
     }
 
-    mappingFirebaseData(mapData) {
-        if (mapData) {
-            this.id = mapData.id,
-                this.floorId = mapData.floor_id;
-            this.title = mapData.title;
-            this.realWidth = mapData.width;
-            this.realHeight = mapData.height;
+    reset() {
+        this.components = [];
+        this.componentFactory = new ComponentFactory();
+        this.currentHeight = 1;
+        this.currentWidth = 1;
+        this.firebaseId = "";
+        this.floorId = "";
+        this.realHeight = 1;
+        this.realWidth = 1;
+        this.id = "";
+        this.title = "";
+        this.numberOfElement = {};
+    }
+
+    mappingFirebaseData(data) {
+        if (data) {
+            this.currentHeight = +data.current_height;
+            this.currentWidth = +data.current_width;
+            this.firebaseId = data.firebase_id;
+            this.floorId = data.floor_id;
+            this.realHeight = +data.height;
+            this.realWidth = +data.width;
+            this.id = data.id;
+            this.title = data.title;
         }
     }
 
     addComponent(type: string, title?: string, x?: number, y?: number, width?: number, height?: number) {
-        let component = this.componentFactory.getComponent(0, type, title, x, y, width, height);
+        
         if (this.numberOfElement[type]) {
             this.numberOfElement[type] += 1;
         } else {
             this.numberOfElement[type] = 1;
         }
-
+        let component = this.componentFactory.getComponent(this.numberOfElement[type], type, title, x, y, width, height);
         if (title === null || title === undefined) {
             component.title = component.type.name + " " + this.numberOfElement[type];
         }
 
         this.components.push(component);
-    }
-
-    getId() {
-        return this.id;
-    }
-
-    getNumberOfElement() {
-        return this.numberOfElement;
     }
 
     setWidth(width: number) {
