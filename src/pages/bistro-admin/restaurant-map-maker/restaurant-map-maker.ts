@@ -172,10 +172,15 @@ export class RestaurantMapMakerPage {
           let target = event.target;
           target.style.webkitTransform =
             target.style.transform = null;
-          target.setAttribute('data-x', 0);
-          target.setAttribute('data-y', 0);
+          // target.setAttribute('data-x', 0);
+          // target.setAttribute('data-y', 0);
           target.classList.remove("dragging");
           this.changeDetectorRef.detectChanges();
+        },
+        onstart: (event) => {
+          let target = event.target;
+          target.setAttribute('data-x', 0);
+          target.setAttribute('data-y', 0);
         }
       })
 
@@ -215,6 +220,7 @@ export class RestaurantMapMakerPage {
           let y = relateElement.offsetTop + parseFloat(relateElement.getAttribute('data-y')) - targetElement.offsetTop;
           if (x < 0) x = 0;
           if (y < 0) y = 0;
+          console.log("ondrop", event, relateElement.getAttribute('data-x'), relateElement.getAttribute('data-y'));
           let type = event.relatedTarget.getAttribute("component");
 
           this.selectedMap.addComponent(type, null, x, y);
@@ -267,19 +273,19 @@ export class RestaurantMapMakerPage {
           endOnly: false,
           restriction: "parent"
         },
-        preserveAspectRatio: false,
         edges: { left: true, right: true, bottom: true, top: true }
       })
       .on('resizemove', (event) => {
+        console.log("resizemove", event);
         let target = event.target;
         let index = target.getAttribute('index');
         if (index && this.selectedMap.components[index]) {
           let component = this.selectedMap.components[index];
           this.addElementToArray("dragging", component.classList);
-          component.x += event.deltaRect.left;
-          component.y += event.deltaRect.top;
-          component.width = event.rect.width;
-          component.height = event.rect.height;
+          component.x += event["deltaRect"].left;
+          component.y += event["deltaRect"].top;
+          component.width = event["rect"].width;
+          component.height = event["rect"].height;
           this.mapZone.classList.add("dragging");
         }
         this.changeDetectorRef.detectChanges();

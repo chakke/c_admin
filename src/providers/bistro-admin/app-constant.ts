@@ -1,7 +1,7 @@
 export class AssetsUrl {
     public static BASE_URL: string = "assets/bistro-admin";
     public static CONFIG: string = "assets/bistro-admin/data/app-config.json";
-    public static DEFAULT_LOGO = "http://cooperslegacyfoundation.org/uploads/3/5/1/7/35179490/9834323_orig.png";
+    public static DEFAULT_LOGO = "assets/bistro-admin/images/no-image-icon.png";
 }
 
 export class FakeAPIUrl {
@@ -123,7 +123,10 @@ export const FIREBASE_PATH = {
     COMPONENT: "components",
     AREA: "areas",
     TABLE: "tables",
-    STAFF: "staffs"
+    STAFF: "staffs",
+    PRODUCT: "products",
+    FOOD: "foods",
+    FOOD_CATEGORY: "food_categories"
 }
 export const FIREBASE_CONST = {
     DOCUMENT_CHANGE_TYPE: {
@@ -175,5 +178,23 @@ export const STAFF_TYPE_NAME = {
 }
 
 
+export const FOOD_STATE = {
+    NOT_YET: {
+        id: 0,
+        value: "Chưa kinh doanh"
+    },
+    AVAILABLE: {
+        id: 1,
+        value: "Sẵn sàng phục vụ"
+    },
+    OUT_OF_STOCK: {
+        id: 2,
+        value: "Hết hàng"
+    },
+    OUT_OF_BUSINESS: {
+        id: 3,
+        value: "Ngừng kinh doanh"
+    }
+}
 
 

@@ -1,0 +1,67 @@
+<ion-header>
+    <ba-header></ba-header>
+</ion-header>
+
+<ion-content>
+    <div class="ba-content">
+        <ba-title [title]="'Quản lý thực đơn'"></ba-title>
+        <div class="main-controls">
+            <ba-buttons-function [showButton]="{buttonAdd: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
+        </div>
+        <div class="ba-section">
+            <div class="section-body">
+                <div class="table table-responsive table-bordered">
+                    <table class="table">
+                        <tr>
+                            <th text-center>STT</th>
+                            <th>Tên món ăn</th>
+                            <th>Mã món ăn</th>
+                            <th>Ảnh </th>
+                            <th>Giá tiền</th>
+                            <th>Trạng Thái</th>
+                            <th>Tác vụ</th>
+                        </tr>
+                        <tr *ngFor="let food of foods; let i = index">
+                            <td text-center>{{i+1}}</td>
+                            <td>{{food.name}}</td>
+                            <td>{{food.id}}</td>
+                            <td><img src="{{food.image}}" alt=""></td>
+                            <td>{{food.price | price}}</td>
+                            <td>{{food.state | foodState}}</td>
+                            <td>
+                                <button class="btn btn-success" (click)="gotoStaffDetail(staff)">
+                              <i class="fa fa-pencil" aria-hidden="true"></i>
+                          </button>
+                                <button class="btn btn-danger" (click)="delete(staff)">
+                              <i class="fa fa-trash" aria-hidden="true"></i>
+                          </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="section-footer">
+                <ul class="pagination pagination-lg">
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                      <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                  </span>
+                    </li>
+                    <li class="page-item"><span class="page-link" href="#">1</span></li>
+                    <li class="page-item active">
+                        <span class="page-link">
+                          2
+                          <span class="sr-only">(current)</span>
+                        </span>
+                    </li>
+                    <li class="page-item"><span class="page-link" href="#">3</span></li>
+                    <li class="page-item">
+                        <span class="page-link" href="#">
+                      <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                  </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</ion-content>

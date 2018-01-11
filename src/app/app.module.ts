@@ -18,6 +18,21 @@ import { ProvinceControllerProvider } from '../providers/bistro-admin/province-c
 import { StaffControllerProvider } from '../providers/bistro-admin/staff-controller/staff-controller';
 import { FirebaseServiceProvider } from '../providers/bistro-admin/firebase-service/firebase-service';
 
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule, AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+
+export const firebaseConfig = {
+  apiKey: "AIzaSyDMEZoEtmor-T166lP9bGCR9FxqQP4eGik",
+  authDomain: "bistrodancerapp.firebaseapp.com",
+  databaseURL: "https://bistrodancerapp.firebaseio.com",
+  projectId: "bistrodancerapp",
+  storageBucket: "bistrodancerapp.appspot.com",
+  messagingSenderId: "773087969883"
+};
+
+
 @NgModule({
   declarations: [
     MyApp
@@ -27,7 +42,11 @@ import { FirebaseServiceProvider } from '../providers/bistro-admin/firebase-serv
     FormsModule,
     HttpModule,
     ComponentsModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireDatabaseModule,
+    AngularFireAuthModule,
+    AngularFirestoreModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -44,7 +63,8 @@ import { FirebaseServiceProvider } from '../providers/bistro-admin/firebase-serv
     RestaurantControllerProvider,
     ProvinceControllerProvider,
     StaffControllerProvider,
-    FirebaseServiceProvider
+    FirebaseServiceProvider,
+    AngularFireDatabase
   ]
 })
 export class AppModule { }

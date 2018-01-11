@@ -34,7 +34,10 @@
         },
         {
             "icon": "<i class='fa fa-cutlery' aria-hidden='true'></i>",
-            "title": "Thực đơn"
+            "title": "Thực đơn",
+            "page": "BaFoodsPage",
+            "link": "ba-foods",
+            "active": false
         },
         {
             "icon": "<i class='fa fa-bell' aria-hidden='true'></i>",

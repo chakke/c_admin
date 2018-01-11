@@ -11,6 +11,7 @@ import { Component } from '@angular/core/src/metadata/directives';
 import { UIComponent } from '../classes/ui-component';
 import { ProgressControllerProvider } from '../progress-controller/progress-controller';
 import { Staff } from '../classes/staff';
+import { Food } from '../classes/food';
 
 @Injectable()
 export class FirebaseServiceProvider {
@@ -260,11 +261,42 @@ export class FirebaseServiceProvider {
     return this.getDocument(FIREBASE_PATH.RESTAURANT + "/" + restId + "/" + FIREBASE_PATH.STAFF + "/" + staffId);
   }
 
-  updateStaff(restId: string, staffId: string, value:any){
+  updateStaff(restId: string, staffId: string, value: any) {
     return this.updateDocument(FIREBASE_PATH.RESTAURANT + "/" + restId + "/" + FIREBASE_PATH.STAFF + "/" + staffId, value);
   }
 
-  deleteStaff(restId: string, staffId: string){
+  deleteStaff(restId: string, staffId: string) {
     return this.deleteDocument(FIREBASE_PATH.RESTAURANT + "/" + restId + "/" + FIREBASE_PATH.STAFF + "/" + staffId);
+  }
+
+  fetchFoodInRestaurant(restId: string) {
+    return this.fetchCollection(FIREBASE_PATH.PRODUCT + "/" + restId + "/" + FIREBASE_PATH.FOOD);
+  }
+
+  getAllFoodCategories(restId: string){
+    return this.getCollection(FIREBASE_PATH.PRODUCT + "/" + restId + "/" + FIREBASE_PATH.FOOD_CATEGORY);
+  }
+
+  addFoodToRestaurant(restId: string, food: Food){
+    return this.addDocument(FIREBASE_PATH.PRODUCT + "/" + restId + "/" + FIREBASE_PATH.FOOD, {
+      album_id: food.albumId,
+      category: food.category,
+      currency: food.currency,
+      description: food.description,
+      en_name: food.enName,
+      firebase_id: food.firebaseId,
+      firebase_reference: food.firebaseReference,
+      image: food.image,
+      name: food.name,
+      options: food.options,
+      paper: food.paper,
+      price: food.price,
+      sales: food.sales,
+      size: food.size,
+      state: food.state,
+      type: food.type,
+      unit: food.unit,
+      time_create: food.timeCreate
+    })
   }
 }

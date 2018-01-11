@@ -1,0 +1,75 @@
+<ion-header>
+    <ba-header></ba-header>
+</ion-header>
+
+<ion-content>
+    <div class="ba-content">
+        <ba-title [title]="'Thêm mới món ăn'"></ba-title>
+        <ba-buttons-function [showButton]="{buttonRemove: true, buttonCheck: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
+        <div class="ba-section" *ngIf="food">
+            <div class="section-body">
+                <div class="form-group ba-form-group ba-avatar-upload">
+                    <div class="avatar">
+                        <img src="{{food.image || defaultLogo}}" alt="">
+                    </div>
+                    <div class="file-name">
+                        {{logoName}}
+                    </div>
+                    <div class="button-groups">
+                        <button class="btn" [ngClass]='{"btn-default": !food.image, "btn-danger": food.image}' (click)="removeLogo()">
+                        <i class="fa fa-times"></i>
+                    </button>
+                        <div class="upload-button">
+                            <label for="selectImageBtn" class="ba-link btn btn-primary" (click)="chooseImage()"> 
+                                    <i class="fa fa-file-image-o "></i> 
+                            </label>
+                            <!-- <input type="file" id="selectImageBtn" name="selectImageBtn" accept="image/*" /> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group ba-form-group">
+                    <label for="food-name">Tên món ăn:</label>
+                    <input type="text" name="food-name" [(ngModel)]="food.name" placeholder="Tên món ăn" class="form-control">
+                </div>
+                <div class="form-group ba-form-group">
+                    <label for="food-enname">Tên tiếng Anh:</label>
+                    <input type="text" name="food-enname" [(ngModel)]="food.enName" placeholder="Tên tiếng Anh" class="form-control">
+                </div>
+                <div class="form-group ba-form-group">
+                    <label for="food-description">Mô tả:</label>
+                    <textarea name="desc" spellcheck="false" placeholder="Mô tả" #desc cols="30" rows="10" [(ngModel)]="food.description"></textarea>
+                </div>
+                <div class="form-group ba-form-group">
+                    <label for="categories">Danh mục:</label>
+                    <select name="categories" id="categories" class="form-control" [(ngModel)]="food.category"> 
+                    <option class="dropdown-item" value="{{category.id}}" *ngFor="let category of categories; let i = index" [selected]="i == 0">{{category.name}}</option> 
+                  </select>
+                </div>
+                <!-- <div class="form-group ba-form-group">
+                    <label for="food-description">Danh mục:</label>
+                    <input type="text" name="food-description" [(ngModel)]="food.description" class="form-control">
+                </div> -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group ba-form-group">
+                            <label for="food-price">Giá:</label>
+                            <input type="number" name="food-price" class="form-control" [(ngModel)]="food.price">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group ba-form-group">
+                            <label for="food-phone">Đơn vị: </label>
+                            <input type="text" name="food-phone" class="form-control" [(ngModel)]="food.phone">
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="form-group ba-form-group">
+                  <label for="types">Loại nhân viên:</label>
+                  <select name="types" id="types" class="form-control" [(ngModel)]="food.foodType"> 
+                    <option class="dropdown-item" value="{{type.id}}" *ngFor="let type of typeData">{{type.name}}</option> 
+                  </select>
+              </div> -->
+            </div>
+        </div>
+    </div>
+</ion-content>

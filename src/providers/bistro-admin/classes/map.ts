@@ -20,12 +20,12 @@ export class Map {
     reset() {
         this.components = [];
         this.componentFactory = new ComponentFactory();
-        this.currentHeight = 1;
-        this.currentWidth = 1;
+        this.currentHeight = 0;
+        this.currentWidth = 0;
         this.firebaseId = "";
         this.floorId = "";
-        this.realHeight = 1;
-        this.realWidth = 1;
+        this.realHeight = 0;
+        this.realWidth = 0;
         this.id = "";
         this.title = "";
         this.numberOfElement = {};

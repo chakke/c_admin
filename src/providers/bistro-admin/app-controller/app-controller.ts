@@ -23,6 +23,8 @@ import { ComponentFactory } from '../factories/component-factory/component-facto
 import { UIComponent } from '../classes/ui-component';
 import { Mappingable } from '../interface/mappingable';
 import { Staff } from '../classes/staff';
+import { FoodCategory } from '../classes/food-category';
+import { Food } from '../classes/food';
 @Injectable()
 export class AppControllerProvider {
 
@@ -151,7 +153,7 @@ export class AppControllerProvider {
     }
   }
 
-  mappingFirebaseData<T extends Mappingable>(array: Array<T>, data: any, type: (new () => T)) {
+  mappingFirebaseFetchedData<T extends Mappingable>(array: Array<T>, data: any, type: (new () => T)) {
     data.docChanges.forEach(change => {
       let elementData = change.doc.data();
       if (change.type == FIREBASE_CONST.DOCUMENT_CHANGE_TYPE.ADD) {
@@ -480,11 +482,38 @@ export class AppControllerProvider {
     })
   }
 
-  updateStaff(restId: string, staffId: string, value: any){
+  updateStaff(restId: string, staffId: string, value: any) {
     return this.firebaseService.updateStaff(restId, staffId, value);
   }
 
-  deleteStaff(restId: string, staffId: string){
+  deleteStaff(restId: string, staffId: string) {
     return this.firebaseService.deleteStaff(restId, staffId);
+  }
+
+  fetchFoodInRestaurant(restId: string) {
+    return this.firebaseService.fetchFoodInRestaurant(restId);
+  }
+
+  getAllFoodCategory(restId: string): Promise<Array<FoodCategory>> {
+    return new Promise((resolve, reject) => {
+      this.firebaseService.getAllFoodCategories(restId).then(data => {
+        if (data) {
+          let result = []
+          data.forEach(element => {
+            let category = new FoodCategory();
+            category.mappingFirebaseData(element);
+            result.push(category);
+          });
+          resolve(result);
+        }
+        else reject();
+      }, error => {
+        reject(error);
+      })
+    })
+  }
+
+  addFoodToRestaurant(restId: string, food: Food) {
+    return this.firebaseService.addFoodToRestaurant(restId, food);
   }
 }

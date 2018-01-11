@@ -25,7 +25,7 @@ export class BaStaffPage {
 
   ionViewDidLoad() {
     this.appController.fetchStaffInRestaurant(this.restId).subscribe(data => {
-      this.appController.mappingFirebaseData(this.staffs, data, Staff);
+      this.appController.mappingFirebaseFetchedData(this.staffs, data, Staff);
       console.log("fecthed staff data", this.staffs);
     })
   }
