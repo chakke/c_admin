@@ -273,11 +273,11 @@ export class FirebaseServiceProvider {
     return this.fetchCollection(FIREBASE_PATH.PRODUCT + "/" + restId + "/" + FIREBASE_PATH.FOOD);
   }
 
-  getAllFoodCategories(restId: string){
+  getAllFoodCategories(restId: string) {
     return this.getCollection(FIREBASE_PATH.PRODUCT + "/" + restId + "/" + FIREBASE_PATH.FOOD_CATEGORY);
   }
 
-  addFoodToRestaurant(restId: string, food: Food){
+  addFoodToRestaurant(restId: string, food: Food) {
     return this.addDocument(FIREBASE_PATH.PRODUCT + "/" + restId + "/" + FIREBASE_PATH.FOOD, {
       album_id: food.albumId,
       category: food.category,
@@ -298,5 +298,17 @@ export class FirebaseServiceProvider {
       unit: food.unit,
       time_create: food.timeCreate
     })
+  }
+
+  getFoodById(restId: string, foodId: string) {
+    return this.getDocument(FIREBASE_PATH.PRODUCT + "/" + restId + "/" + FIREBASE_PATH.FOOD + "/" + foodId);
+  }
+
+  updateFood(restId: string, foodId: string, value: any) {
+    return this.updateDocument(FIREBASE_PATH.PRODUCT + "/" + restId + "/" + FIREBASE_PATH.FOOD + "/" + foodId, value);
+  }
+
+  deleteFood(restId: string, foodId: string){
+    return this.deleteDocument(FIREBASE_PATH.PRODUCT + "/" + restId + "/" + FIREBASE_PATH.FOOD + "/" + foodId);
   }
 }

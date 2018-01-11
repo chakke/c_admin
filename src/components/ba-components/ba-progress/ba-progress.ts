@@ -8,7 +8,7 @@ import { ProgressControllerProvider } from '../../../providers/bistro-admin/prog
 })
 export class BaProgressComponent {
   numberOfProgress = 0; //Number ò request at a time
-  progressTimeOut = 10000; //Timeout for the life of progress. If out of time, it must be go to hell;
+  progressTimeOut = 100000; //Timeout for the life of progress. If out of time, it must be go to hell;
   progress = 0; //Progress 0-100
   timePerequest = 3 //(ms) Add or  remove request will add or minus debounceTime
   debounceTime = 3; //each debounceTime(ms) increase progress by percentPerTime;

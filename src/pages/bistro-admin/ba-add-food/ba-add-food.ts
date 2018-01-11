@@ -17,7 +17,7 @@ export class BaAddFoodPage {
   food: Food;
   defaultLogo: string;
   categories: Array<FoodCategory> = [];
-
+  foodStates = [];
   descriptionEditor: any;
   @ViewChild("desc") articleDesc: ElementRef;
   constructor(
@@ -30,7 +30,11 @@ export class BaAddFoodPage {
     }
     this.food = new Food();
     this.defaultLogo = AssetsUrl.DEFAULT_LOGO;
-
+    for (const key in FOOD_STATE) {
+      if (FOOD_STATE.hasOwnProperty(key)) {
+        this.foodStates.push(FOOD_STATE[key]);
+      }
+    }
   }
 
   ionViewDidEnter() {
@@ -72,6 +76,7 @@ export class BaAddFoodPage {
   functionButtonClick(button) {
     if (button == FunctionButtonName.BUTTON_CHECK) {
       this.food.state = FOOD_STATE.AVAILABLE.id;
+      this.food.description = this.descriptionEditor.getData();
       this.appController.addFoodToRestaurant(this.restId, this.food).then(success => {
         this.appController.showToast("Thêm món ăn thành công");
         this.gotoListFoodPage();
@@ -79,6 +84,8 @@ export class BaAddFoodPage {
         this.appController.showToast("Thêm món ăn thất bại, vui lòng thử lại sau");
         console.log("add Food error", error);
       })
+    } else {
+      this.gotoListFoodPage();
     }
   }
 

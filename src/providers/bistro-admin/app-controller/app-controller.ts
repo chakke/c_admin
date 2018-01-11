@@ -516,4 +516,28 @@ export class AppControllerProvider {
   addFoodToRestaurant(restId: string, food: Food) {
     return this.firebaseService.addFoodToRestaurant(restId, food);
   }
+
+  getFoodById(restId: string, foodId: string): Promise<Food> {
+    return new Promise((resolve, reject) => {
+      this.firebaseService.getFoodById(restId, foodId).then(data => {
+        if (data) {
+          let food = new Food();
+          food.mappingFirebaseData(data);
+          resolve(food);
+        } else {
+          reject();
+        }
+      }, error => {
+        reject(error);
+      })
+    })
+  }
+
+  updateFood(restId: string, foodId: string, value: any) {
+    return this.firebaseService.updateFood(restId, foodId, value);
+  }
+
+  deleteFood(restId: string, foodId: string){
+    return this.firebaseService.deleteFood(restId, foodId);
+  }
 }

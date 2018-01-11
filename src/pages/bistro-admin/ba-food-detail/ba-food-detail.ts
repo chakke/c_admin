@@ -1,25 +1,128 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { AppControllerProvider } from '../../../providers/bistro-admin/app-controller/app-controller';
+import { Food } from '../../../providers/bistro-admin/classes/food';
+import { AssetsUrl, FunctionButtonName, FOOD_STATE } from '../../../providers/bistro-admin/app-constant';
+import { ModalController } from 'ionic-angular/components/modal/modal-controller';
+import { FoodCategory } from '../../../providers/bistro-admin/classes/food-category';
 
-/**
- * Generated class for the BaFoodDetailPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
-@IonicPage()
+declare var ClassicEditor: any;
+@IonicPage({ segment: 'food-detail/:foodId' })
 @Component({
   selector: 'page-ba-food-detail',
   templateUrl: 'ba-food-detail.html',
 })
 export class BaFoodDetailPage {
+  restId = "bistro";
+  foodId: string = "";
+  food: Food;
+  defaultLogo: string;
+  categories: Array<FoodCategory> = [];
+  foodStates = [];
+  isLoadedData = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  descriptionEditor: any;
+  @ViewChild("desc") articleDesc: ElementRef;
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public appController: AppControllerProvider,
+    public modalCtrl: ModalController) {
+    if (this.navParams.get("restId")) {
+      this.restId = this.navParams.get("restId");
+    }
+    if (this.navParams.get("foodId")) {
+      this.foodId = this.navParams.get("foodId");
+    }
+    this.food = new Food();
+    this.defaultLogo = AssetsUrl.DEFAULT_LOGO;
+    for (const key in FOOD_STATE) {
+      if (FOOD_STATE.hasOwnProperty(key)) {
+        this.foodStates.push(FOOD_STATE[key]);
+      }
+    }
+
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad BaFoodDetailPage');
+  ionViewDidEnter() {
+    this.appController.getFoodById(this.restId, this.foodId).then(data => {
+      if (data) {
+        this.food = data;
+        this.isLoadedData = true;
+        console.log("food", this.food);
+        //Ckeditor
+        setTimeout(() => {
+          if (this.articleDesc) {
+            ClassicEditor
+              .create(this.articleDesc.nativeElement)
+              .then(editor => {
+                this.descriptionEditor = editor;
+              })
+              .catch(error => {
+                console.error(error);
+              });
+          }
+        }, 100)
+
+      }
+    }, error => {
+      console.log("get food error", error);
+    }).catch(error=>{ 
+      console.log("get food error", error);
+    })
+
+    this.appController.getAllFoodCategory(this.restId).then(data => {
+      if (data) {
+        this.categories = data;
+      }
+    }, error => {
+      console.log("get FoodCategory error", error);
+    })
+  }
+
+  removeLogo() {
+    this.food.image = "";
+  }
+
+  chooseImage() {
+    console.log("choose image");
+    let modal = this.modalCtrl.create("FirebaseStoragePage", {
+      title: "Chọn ảnh món ăn"
+    });
+    modal.present();
+    modal.onDidDismiss(data => {
+      if (data && data.image) {
+        this.food.image = data.image.url;
+      }
+    })
+  }
+
+  functionButtonClick(button) {
+    this.food.description = this.descriptionEditor.getData();
+    if (button == FunctionButtonName.BUTTON_CHECK) {
+      if (this.isLoadedData) {
+        this.appController.updateFood(this.restId, this.foodId, {
+          image: this.food.image,
+          name: this.food.name,
+          en_name: this.food.enName,
+          description: this.food.description,
+          category: this.food.category,
+          price: this.food.price,
+          unit: this.food.unit,
+          state: this.food.state
+        }).then(success => {
+          this.appController.showToast("Chỉnh sửa món ăn thành công");
+        }, error => {
+          this.appController.showToast("Chỉnh sửa thất bại, vui lòng thử lại sau");
+        })
+      }
+    } else {
+      this.gotoListFoodPage();
+    }
+  }
+
+  gotoListFoodPage() {
+    this.appController.setRootPage("BaFoodsPage");
   }
 
 }

@@ -292,7 +292,7 @@ export class FirebaseStoragePage {
   // =================== USER EVENT =================
   VIEW_LIST: number = 0;
   VIEW_GRID: number = 1;
-  mViewType: number = 0;
+  mViewType: number = 1;
   /**Thay đổi cách hiển thị file */
   onClickSwitchViewType(viewType: number) {
     this.mViewType = viewType;

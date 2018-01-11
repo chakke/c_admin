@@ -39,12 +39,25 @@
                     <label for="food-description">Mô tả:</label>
                     <textarea name="desc" spellcheck="false" placeholder="Mô tả" #desc cols="30" rows="10" [(ngModel)]="food.description"></textarea>
                 </div>
-                <div class="form-group ba-form-group">
-                    <label for="categories">Danh mục:</label>
-                    <select name="categories" id="categories" class="form-control" [(ngModel)]="food.category"> 
-                    <option class="dropdown-item" value="{{category.id}}" *ngFor="let category of categories; let i = index" [selected]="i == 0">{{category.name}}</option> 
-                  </select>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group ba-form-group">
+                            <label for="categories">Danh mục:</label>
+                            <select name="categories" id="categories" class="form-control" [(ngModel)]="food.category"> 
+                            <option class="dropdown-item" value="{{category.id}}" *ngFor="let category of categories; let i = index" [selected]="i == 0">{{category.name}}</option> 
+                          </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group ba-form-group">
+                            <label for="categories">Trạng thái:</label>
+                            <select name="categories" id="categories" class="form-control" [(ngModel)]="food.state"> 
+                              <option class="dropdown-item" value="{{state.id}}" *ngFor="let state of foodStates; let i = index">{{state.value}}</option> 
+                            </select>
+                        </div>
+                    </div>
                 </div>
+
                 <!-- <div class="form-group ba-form-group">
                     <label for="food-description">Danh mục:</label>
                     <input type="text" name="food-description" [(ngModel)]="food.description" class="form-control">

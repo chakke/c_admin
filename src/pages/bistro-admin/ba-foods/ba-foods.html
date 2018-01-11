@@ -29,10 +29,10 @@
                             <td>{{food.price | price}}</td>
                             <td>{{food.state | foodState}}</td>
                             <td>
-                                <button class="btn btn-success" (click)="gotoStaffDetail(staff)">
+                                <button class="btn btn-success" (click)="gotoFoodDetail(food)">
                               <i class="fa fa-pencil" aria-hidden="true"></i>
                           </button>
-                                <button class="btn btn-danger" (click)="delete(staff)">
+                                <button class="btn btn-danger" (click)="delete(food)">
                               <i class="fa fa-trash" aria-hidden="true"></i>
                           </button>
                             </td>
