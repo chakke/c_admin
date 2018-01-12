@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AppControllerProvider } from '../../../providers/bistro-admin/app-controller/app-controller';
-import { Food } from '../../../providers/bistro-admin/classes/food';
+import { Food, FoodType } from '../../../providers/bistro-admin/classes/food';
 import { AssetsUrl, FunctionButtonName, FOOD_STATE } from '../../../providers/bistro-admin/app-constant';
 import { ModalController } from 'ionic-angular/components/modal/modal-controller';
 import { FoodCategory } from '../../../providers/bistro-admin/classes/food-category';
@@ -17,6 +17,7 @@ export class BaAddFoodPage {
   food: Food;
   defaultLogo: string;
   categories: Array<FoodCategory> = [];
+  types: Array<FoodType> = [];
   foodStates = [];
   descriptionEditor: any;
   @ViewChild("desc") articleDesc: ElementRef;
@@ -35,6 +36,7 @@ export class BaAddFoodPage {
         this.foodStates.push(FOOD_STATE[key]);
       }
     }
+    this.food.state = FOOD_STATE.AVAILABLE.id;
   }
 
   ionViewDidEnter() {
@@ -49,10 +51,19 @@ export class BaAddFoodPage {
     this.appController.getAllFoodCategory(this.restId).then(data => {
       if (data) {
         this.categories = data;
-        this.food.category = this.categories[0].id;
+        this.food.category = this.categories[0].code;
       }
     }, error => {
       console.log("get FoodCategory error", error);
+    })
+
+    this.appController.getAllFoodTypeInRestaurant(this.restId).then(data=>{
+      if(data){
+        this.types = data;
+        this.food.type = this.types[0].code;
+      }
+    }, error => {
+      console.log("get FoodType error", error);
     })
   }
 
@@ -74,8 +85,7 @@ export class BaAddFoodPage {
   }
 
   functionButtonClick(button) {
-    if (button == FunctionButtonName.BUTTON_CHECK) {
-      this.food.state = FOOD_STATE.AVAILABLE.id;
+    if (button == FunctionButtonName.BUTTON_CHECK) {      
       this.food.description = this.descriptionEditor.getData();
       this.appController.addFoodToRestaurant(this.restId, this.food).then(success => {
         this.appController.showToast("Thêm món ăn thành công");

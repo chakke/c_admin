@@ -24,7 +24,7 @@ import { UIComponent } from '../classes/ui-component';
 import { Mappingable } from '../interface/mappingable';
 import { Staff } from '../classes/staff';
 import { FoodCategory } from '../classes/food-category';
-import { Food } from '../classes/food';
+import { Food, FoodType } from '../classes/food';
 @Injectable()
 export class AppControllerProvider {
 
@@ -75,6 +75,7 @@ export class AppControllerProvider {
       this.toast.dismiss();
     }
   }
+
 
   loadConfig() {
     return new Promise((resolve, reject) => {
@@ -537,7 +538,32 @@ export class AppControllerProvider {
     return this.firebaseService.updateFood(restId, foodId, value);
   }
 
-  deleteFood(restId: string, foodId: string){
+  deleteFood(restId: string, foodId: string) {
     return this.firebaseService.deleteFood(restId, foodId);
+  }
+
+  addFoodCategory(restId: string, category: FoodCategory) {
+    return this.firebaseService.addFoodCategoryToRestaurant(restId, category);
+  }
+
+  addFoodType(restId: string, type: FoodType) {
+    return this.firebaseService.addFoodTypeToRestaurant(restId, type);
+  }
+
+  getAllFoodTypeInRestaurant(restId: string): Promise<Array<FoodType>> {
+    return new Promise((resolve, reject) => {
+      this.firebaseService.getAllFoodTypeInRestaurant(restId).then(data => {
+        if (data) {
+          let result = []
+          data.forEach(element => {
+            let type = new FoodType();
+            type.mappingFirebaseData(element);
+            result.push(type);
+          });
+          resolve(result);
+        }
+        else reject();
+      });
+    })
   }
 }

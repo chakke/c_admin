@@ -66,6 +66,7 @@ export class FunctionButtonName {
     public static BUTTON_DELETE: string = "buttonDelete";
     public static BUTTON_REMOVE: string = "buttonRemove";
     public static BUTTON_CHECK: string = "buttonCheck";
+    public static BUTTON_IMPORT: string = "buttonImport";
 }
 
 import { IComponentType } from "../bistro-admin/interface/i-component-type";
@@ -126,7 +127,8 @@ export const FIREBASE_PATH = {
     STAFF: "staffs",
     PRODUCT: "products",
     FOOD: "foods",
-    FOOD_CATEGORY: "food_categories"
+    FOOD_CATEGORY: "food_categories",
+    FOOD_TYPE: "food_types",
 }
 export const FIREBASE_CONST = {
     DOCUMENT_CHANGE_TYPE: {

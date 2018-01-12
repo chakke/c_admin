@@ -2,6 +2,7 @@ import { Mappingable } from "../interface/mappingable";
 
 export class FoodCategory implements Mappingable {
     id: string;
+    code: string;
     name: string;
     enName: string;
     firebaseId: string;
@@ -11,6 +12,7 @@ export class FoodCategory implements Mappingable {
     }
     reset() {
         this.id = "";
+        this.code = "";
         this.name = "";
         this.enName = "";
         this.firebaseId = "";
@@ -19,6 +21,7 @@ export class FoodCategory implements Mappingable {
     mappingFirebaseData(data) {
         if (data) {
             this.id = data.id;
+            this.code = data.code;
             this.name = data.name;
             this.enName = data.en_name;
             this.firebaseReference = data.firebase_reference;

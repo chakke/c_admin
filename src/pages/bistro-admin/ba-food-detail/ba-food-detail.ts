@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AppControllerProvider } from '../../../providers/bistro-admin/app-controller/app-controller';
-import { Food } from '../../../providers/bistro-admin/classes/food';
+import { Food, FoodType } from '../../../providers/bistro-admin/classes/food';
 import { AssetsUrl, FunctionButtonName, FOOD_STATE } from '../../../providers/bistro-admin/app-constant';
 import { ModalController } from 'ionic-angular/components/modal/modal-controller';
 import { FoodCategory } from '../../../providers/bistro-admin/classes/food-category';
@@ -18,6 +18,7 @@ export class BaFoodDetailPage {
   food: Food;
   defaultLogo: string;
   categories: Array<FoodCategory> = [];
+  types: Array<FoodType> = [];
   foodStates = [];
   isLoadedData = false;
 
@@ -67,16 +68,23 @@ export class BaFoodDetailPage {
       }
     }, error => {
       console.log("get food error", error);
-    }).catch(error=>{ 
+    }).catch(error => {
       console.log("get food error", error);
     })
 
     this.appController.getAllFoodCategory(this.restId).then(data => {
       if (data) {
         this.categories = data;
+        console.log(this.categories);
       }
     }, error => {
       console.log("get FoodCategory error", error);
+    })
+
+    this.appController.getAllFoodTypeInRestaurant(this.restId).then(data => {
+      if (data) this.types = data;
+    }, error => {
+      console.log("get food type error", error);
     })
   }
 
@@ -109,7 +117,9 @@ export class BaFoodDetailPage {
           category: this.food.category,
           price: this.food.price,
           unit: this.food.unit,
-          state: this.food.state
+          state: this.food.state,
+          type: this.food.type,
+          code: this.food.code
         }).then(success => {
           this.appController.showToast("Chỉnh sửa món ăn thành công");
         }, error => {

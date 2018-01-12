@@ -11,7 +11,8 @@ import { Component } from '@angular/core/src/metadata/directives';
 import { UIComponent } from '../classes/ui-component';
 import { ProgressControllerProvider } from '../progress-controller/progress-controller';
 import { Staff } from '../classes/staff';
-import { Food } from '../classes/food';
+import { Food, FoodType } from '../classes/food';
+import { FoodCategory } from '../classes/food-category';
 
 @Injectable()
 export class FirebaseServiceProvider {
@@ -32,8 +33,7 @@ export class FirebaseServiceProvider {
     this.db = firebase.firestore();
   }
 
-  addDocument(collection: string, value: any, documentId?: string): Promise<any> {
-    console.log("firebase add document", collection, documentId);
+  addDocument(collection: string, value: any, documentId?: string): Promise<any> { 
     this.progressController.add();
     if (documentId) {
       value["firebase_id"] = documentId;
@@ -56,12 +56,10 @@ export class FirebaseServiceProvider {
 
   }
 
-  getDocument(path: string): Promise<any> {
-    console.log("firebase get document", path);
+  getDocument(path: string): Promise<any> { 
     this.progressController.add();
     return new Promise((resolve, reject) => {
-      this.db.doc(path).get().then(success => {
-        console.log("get document succsess", success.data());
+      this.db.doc(path).get().then(success => { 
         if (success.exists) {
           let result = success.data();
           resolve(result);
@@ -70,47 +68,39 @@ export class FirebaseServiceProvider {
         }
         this.progressController.subtract();
       }, error => {
-        this.progressController.subtract();
-        console.log("get fail", error);
+        this.progressController.subtract(); 
         reject(error);
       })
     })
   }
 
-  updateDocument(path: string, data: any): Promise<any> {
-    console.log("firebase update document", path);
+  updateDocument(path: string, data: any): Promise<any> { 
     this.progressController.add();
     return new Promise((resolve, reject) => {
-      this.db.doc(path).update(data).then(success => {
-        console.log("update succsess", success);
+      this.db.doc(path).update(data).then(success => { 
         resolve();
         this.progressController.subtract();
       }, error => {
-        this.progressController.subtract();
-        console.log("update fail", error);
+        this.progressController.subtract(); 
         reject();
       })
     })
   }
 
-  deleteDocument(path: string): Promise<any> {
-    console.log("firebase delete document", path);
+  deleteDocument(path: string): Promise<any> { 
     this.progressController.add();
     return new Promise((resolve, reject) => {
-      this.db.doc(path).delete().then(success => {
-        console.log("delete succsess", success);
+      this.db.doc(path).delete().then(success => { 
         resolve();
         this.progressController.subtract();
       }, error => {
-        this.progressController.subtract();
-        console.log("delete fail", error);
+        this.progressController.subtract(); 
         reject();
       })
     })
   }
 
   getCollection(path: string, queries?: Array<FirebaseQuery>, orders?: Array<FirebaseOrder>, limit?: number): Promise<any> {
-    console.log("firebase get collection", path);
     this.progressController.add();
     return new Promise((resolve, reject) => {
       let ref = this.db.collection(path) as firebase.firestore.Query;
@@ -138,7 +128,6 @@ export class FirebaseServiceProvider {
         resolve(result);
       }, error => {
         this.progressController.subtract();
-        console.log("get collection fail", error);
         reject(error);
       })
     })
@@ -296,7 +285,8 @@ export class FirebaseServiceProvider {
       state: food.state,
       type: food.type,
       unit: food.unit,
-      time_create: food.timeCreate
+      time_create: food.timeCreate,
+      code: food.code
     })
   }
 
@@ -308,7 +298,32 @@ export class FirebaseServiceProvider {
     return this.updateDocument(FIREBASE_PATH.PRODUCT + "/" + restId + "/" + FIREBASE_PATH.FOOD + "/" + foodId, value);
   }
 
-  deleteFood(restId: string, foodId: string){
+  deleteFood(restId: string, foodId: string) {
     return this.deleteDocument(FIREBASE_PATH.PRODUCT + "/" + restId + "/" + FIREBASE_PATH.FOOD + "/" + foodId);
+  }
+
+  addFoodCategoryToRestaurant(restId: string, category: FoodCategory) {
+    return this.addDocument(FIREBASE_PATH.PRODUCT + "/" + restId + "/" + FIREBASE_PATH.FOOD_CATEGORY, {
+      code: category.code,
+      name: category.name,
+      en_name: category.enName,
+      firebase_id: category.firebaseId,
+      firebase_reference: category.firebaseReference
+    })
+  }
+
+  addFoodTypeToRestaurant(restId: string, type: FoodType) {
+    return this.addDocument(FIREBASE_PATH.PRODUCT + "/" + restId + "/" + FIREBASE_PATH.FOOD_TYPE, {
+      code: type.code,
+      name: type.name,
+      en_name: type.enName,
+      firebase_id: type.firebaseId,
+      firebase_reference: type.firebaseReference
+    })
+  }
+
+  getAllFoodTypeInRestaurant(restId: string){
+    return this.getCollection(FIREBASE_PATH.PRODUCT + "/" + restId + "/" + FIREBASE_PATH.FOOD_TYPE);
+
   }
 }

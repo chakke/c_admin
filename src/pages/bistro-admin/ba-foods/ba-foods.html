@@ -6,7 +6,7 @@
     <div class="ba-content">
         <ba-title [title]="'Quản lý thực đơn'"></ba-title>
         <div class="main-controls">
-            <ba-buttons-function [showButton]="{buttonAdd: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
+            <ba-buttons-function [showButton]="{buttonAdd: true, buttonImport: true}" (buttonClick)="functionButtonClick($event)"></ba-buttons-function>
         </div>
         <div class="ba-section">
             <div class="section-body">
@@ -24,7 +24,7 @@
                         <tr *ngFor="let food of foods; let i = index">
                             <td text-center>{{i+1}}</td>
                             <td>{{food.name}}</td>
-                            <td>{{food.id}}</td>
+                            <td>{{food.code}}</td>
                             <td><img src="{{food.image}}" alt=""></td>
                             <td>{{food.price | price}}</td>
                             <td>{{food.state | foodState}}</td>
