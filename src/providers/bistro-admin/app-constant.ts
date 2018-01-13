@@ -149,6 +149,49 @@ export const STAFF_ROLE = {
     SECURITY: 7
 }
 
+export const STAFF_ROLE_FULL = {
+    CHEF: {
+        id: 1,
+        name: "Đầu bếp",
+        shortName: "bếp"
+    },
+    BAR: {
+        id: 8,
+        name: "Nhân viên pha chế",
+        shortName: "bar"
+    },
+    WAITER: {
+        id: 2,
+        name: "Nhân viên chạy bàn",
+        shortName: "waiter"
+    },
+    ORDER: {
+        id: 3,
+        name: "Nhân viên ghi order",
+        shortName: "bàn"
+    },
+    RECEPTIONIST: {
+        id: 4,
+        name: "Thu ngân",
+        shortName: "thu ngân"
+    },
+    MANAGER: {
+        id: 5,
+        name: "Quản lý",
+        shortName: "boss"
+    },
+    SUPERVISOR: {
+        id: 6,
+        name: "Quản lý cấp cao",
+        shortName: "super boss"
+    },
+    SECURITY: {
+        id: 7,
+        name: "Bảo vệ",
+        shortName: "bv"
+    }
+}
+
 export const STAFF_ROLE_NAME = {
     1: "Đầu bếp",
     8: "Bartender",

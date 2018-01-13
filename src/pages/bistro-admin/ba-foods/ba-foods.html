@@ -37,30 +37,11 @@
                           </button>
                             </td>
                         </tr>
+                        <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+                            <ion-infinite-scroll-content></ion-infinite-scroll-content>
+                        </ion-infinite-scroll>
                     </table>
                 </div>
-            </div>
-            <div class="section-footer">
-                <ul class="pagination pagination-lg">
-                    <li class="page-item disabled">
-                        <span class="page-link">
-                      <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                  </span>
-                    </li>
-                    <li class="page-item"><span class="page-link" href="#">1</span></li>
-                    <li class="page-item active">
-                        <span class="page-link">
-                          2
-                          <span class="sr-only">(current)</span>
-                        </span>
-                    </li>
-                    <li class="page-item"><span class="page-link" href="#">3</span></li>
-                    <li class="page-item">
-                        <span class="page-link" href="#">
-                      <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                  </span>
-                    </li>
-                </ul>
             </div>
         </div>
     </div>

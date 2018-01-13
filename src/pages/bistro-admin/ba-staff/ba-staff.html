@@ -24,7 +24,6 @@
                         <tr>
                             <th text-center>STT</th>
                             <th>Tên nhân viên</th>
-                            <th>Mã nhân viên</th>
                             <th>Email </th>
                             <th>Số điện thoại</th>
                             <th>Chức vụ</th>
@@ -34,10 +33,9 @@
                         <tr *ngFor="let staff of staffs; let i = index">
                             <td text-center>{{i+1}}</td>
                             <td>{{staff.name}}</td>
-                            <td>{{staff.id}}</td>
-                            <td>{{staff.email}}</td>
+                            <td style="word-break: break-all;">{{staff.email}}</td>
                             <td>{{staff.phone}}</td>
-                            <td>{{staff.staffRoleName}}</td>
+                            <td>{{getStaffRoles(staff.staffRole)}}</td>
                             <td>Hoạt động</td>
                             <td>
                                 <button class="btn btn-success" (click)="gotoStaffDetail(staff)">

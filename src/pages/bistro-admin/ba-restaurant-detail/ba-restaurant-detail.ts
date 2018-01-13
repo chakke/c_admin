@@ -26,7 +26,7 @@ export class BaRestaurantDetailPage {
 
     if (this.navParams.get("id")) {
       this.appController.getRestauranById(this.navParams.get("id")).then(restaurant => {
-        this.restaurant = restaurant; 
+        this.restaurant = restaurant;
         if (this.restaurant.logo) {
           let lastIndex = this.restaurant.logo.lastIndexOf("/");
           if (lastIndex > -1) {
@@ -35,9 +35,11 @@ export class BaRestaurantDetailPage {
             this.logoName = "";
           }
         }
+      }, error => {
+        console.log("get restaurant error", error);
       });
     }
-    else { 
+    else {
       this.restaurant = new Restaurant();
     }
   }
@@ -71,7 +73,7 @@ export class BaRestaurantDetailPage {
     this.logoName = "Chưa chọn ảnh nào";
   }
 
-  functionButtonClick(button) { 
+  functionButtonClick(button) {
     this.appController.setRootPage("BaRestaurantPage");
   }
 

@@ -17,12 +17,14 @@ import { RestaurantControllerProvider } from '../providers/bistro-admin/restaura
 import { ProvinceControllerProvider } from '../providers/bistro-admin/province-controller/province-controller';
 import { StaffControllerProvider } from '../providers/bistro-admin/staff-controller/staff-controller';
 import { FirebaseServiceProvider } from '../providers/bistro-admin/firebase-service/firebase-service';
+// import { BackupFirebaseServiceProvider } from '../providers/bistro-admin/firebase-service/backup-firebase-service';
 
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule, AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 
+//main project
 export const firebaseConfig = {
   apiKey: "AIzaSyDMEZoEtmor-T166lP9bGCR9FxqQP4eGik",
   authDomain: "bistrodancerapp.firebaseapp.com",
@@ -31,6 +33,16 @@ export const firebaseConfig = {
   storageBucket: "bistrodancerapp.appspot.com",
   messagingSenderId: "773087969883"
 };
+
+//backup project
+// export const firebaseConfig = {
+//   apiKey: "AIzaSyADH7xZZdoVLadnk4GOux5I5OjDcclrc7c",
+//   authDomain: "bistro-backup-e5bc1.firebaseapp.com",
+//   databaseURL: "https://bistro-backup-e5bc1.firebaseio.com",
+//   projectId: "bistro-backup-e5bc1",
+//   storageBucket: "bistro-backup-e5bc1.appspot.com",
+//   messagingSenderId: "160393617494"
+// };
 
 
 @NgModule({
@@ -63,8 +75,9 @@ export const firebaseConfig = {
     RestaurantControllerProvider,
     ProvinceControllerProvider,
     StaffControllerProvider,
+    AngularFireDatabase,
     FirebaseServiceProvider,
-    AngularFireDatabase
+    // BackupFirebaseServiceProvider
   ]
 })
 export class AppModule { }

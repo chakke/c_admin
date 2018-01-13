@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Chart } from 'chart.js';
+import { FirebaseServiceProvider } from '../../../providers/bistro-admin/firebase-service/firebase-service';
+// import { BackupFirebaseServiceProvider } from '../../../providers/bistro-admin/firebase-service/backup-firebase-service';
+import { FIREBASE_PATH } from '../../../providers/bistro-admin/app-constant';
 
 @IonicPage()
 @Component({
@@ -9,7 +12,10 @@ import { Chart } from 'chart.js';
 })
 export class BaDashboardPage {
   sumaryItems = [];
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public firebaseService: FirebaseServiceProvider) {
     this.sumaryItems = [
       {
         icon: "user",
@@ -34,7 +40,26 @@ export class BaDashboardPage {
     ]
   }
 
-  ionViewDidLoad() { 
+  ionViewDidLoad() {
+    // this.firebaseService.getAllMapInRestaurant("bistro").then(data => {
+    //   console.log("main service", data);
+    //   if (data) {
+    //     this.backupFirebaseService.getAllMapInRestaurant("bistro").then(backupData => {
+    //       if (backupData) {
+    //         for (let i = 0; i < data.length; i++) {
+    //           this.firebaseService.getCollection(FIREBASE_PATH.RESTAURANT + "/bistro/maps/" + data[i].id + "/components").then(componentData => {
+    //             if (componentData) {
+    //               componentData.forEach(component => {
+    //                 this.backupFirebaseService.addDocument(FIREBASE_PATH.RESTAURANT + "/bistro/maps/" + backupData[i].id + "/components", component);
+    //               });
+    //             }
+    //           })
+    //         }
+    //       }
+    //     })
+
+    //   }
+    // })
     this.drawChart();
   }
 

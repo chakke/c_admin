@@ -22,18 +22,28 @@ export class FirebaseServiceProvider {
   todayString: string;
   defaultPass: string = "123456";
   constructor(private progressController: ProgressControllerProvider) {
+    //main project
+    // firebase.initializeApp({
+    //   apiKey: "AIzaSyDMEZoEtmor-T166lP9bGCR9FxqQP4eGik",
+    //   authDomain: "bistrodancerapp.firebaseapp.com",
+    //   databaseURL: "https://bistrodancerapp.firebaseio.com",
+    //   projectId: "bistrodancerapp",
+    //   storageBucket: "bistrodancerapp.appspot.com",
+    //   messagingSenderId: "773087969883"
+    // });
+    // backup project
     firebase.initializeApp({
-      apiKey: "AIzaSyDMEZoEtmor-T166lP9bGCR9FxqQP4eGik",
-      authDomain: "bistrodancerapp.firebaseapp.com",
-      databaseURL: "https://bistrodancerapp.firebaseio.com",
-      projectId: "bistrodancerapp",
-      storageBucket: "bistrodancerapp.appspot.com",
-      messagingSenderId: "773087969883"
+      apiKey: "AIzaSyADH7xZZdoVLadnk4GOux5I5OjDcclrc7c",
+      authDomain: "bistro-backup-e5bc1.firebaseapp.com",
+      databaseURL: "https://bistro-backup-e5bc1.firebaseio.com",
+      projectId: "bistro-backup-e5bc1",
+      storageBucket: "bistro-backup-e5bc1.appspot.com",
+      messagingSenderId: "160393617494"
     });
     this.db = firebase.firestore();
   }
 
-  addDocument(collection: string, value: any, documentId?: string): Promise<any> { 
+  addDocument(collection: string, value: any, documentId?: string): Promise<any> {
     this.progressController.add();
     if (documentId) {
       value["firebase_id"] = documentId;
@@ -56,10 +66,10 @@ export class FirebaseServiceProvider {
 
   }
 
-  getDocument(path: string): Promise<any> { 
+  getDocument(path: string): Promise<any> {
     this.progressController.add();
     return new Promise((resolve, reject) => {
-      this.db.doc(path).get().then(success => { 
+      this.db.doc(path).get().then(success => {
         if (success.exists) {
           let result = success.data();
           resolve(result);
@@ -68,33 +78,33 @@ export class FirebaseServiceProvider {
         }
         this.progressController.subtract();
       }, error => {
-        this.progressController.subtract(); 
+        this.progressController.subtract();
         reject(error);
       })
     })
   }
 
-  updateDocument(path: string, data: any): Promise<any> { 
+  updateDocument(path: string, data: any): Promise<any> {
     this.progressController.add();
     return new Promise((resolve, reject) => {
-      this.db.doc(path).update(data).then(success => { 
+      this.db.doc(path).update(data).then(success => {
         resolve();
         this.progressController.subtract();
       }, error => {
-        this.progressController.subtract(); 
+        this.progressController.subtract();
         reject();
       })
     })
   }
 
-  deleteDocument(path: string): Promise<any> { 
+  deleteDocument(path: string): Promise<any> {
     this.progressController.add();
     return new Promise((resolve, reject) => {
-      this.db.doc(path).delete().then(success => { 
+      this.db.doc(path).delete().then(success => {
         resolve();
         this.progressController.subtract();
       }, error => {
-        this.progressController.subtract(); 
+        this.progressController.subtract();
         reject();
       })
     })
@@ -233,12 +243,14 @@ export class FirebaseServiceProvider {
     return this.addDocument(FIREBASE_PATH.RESTAURANT + "/" + restId + "/" + FIREBASE_PATH.STAFF, {
       birthday: staff.birthDay,
       email: staff.email,
-      identify: staff.identify,
       name: staff.name,
       phone: staff.phone,
       staff_role: staff.staffRole,
       staff_type: staff.staffType,
-      username: staff.userName
+      user_name: staff.userName,
+      address: staff.address,
+      addition_information: staff.additionInformation,
+      id_card: staff.idCard
     })
   }
 
@@ -322,7 +334,7 @@ export class FirebaseServiceProvider {
     })
   }
 
-  getAllFoodTypeInRestaurant(restId: string){
+  getAllFoodTypeInRestaurant(restId: string) {
     return this.getCollection(FIREBASE_PATH.PRODUCT + "/" + restId + "/" + FIREBASE_PATH.FOOD_TYPE);
 
   }

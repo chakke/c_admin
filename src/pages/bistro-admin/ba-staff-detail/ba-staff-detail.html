@@ -16,7 +16,7 @@
                     <div class="col-md-6">
                         <div class="form-group ba-form-group">
                             <label for="staff-email">Email:</label>
-                            <input type="text" readonly name="staff-email" class="form-control" [(ngModel)]="staff.email">
+                            <input type="text" name="staff-email" class="form-control" [(ngModel)]="staff.email">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -26,21 +26,41 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="form-group ba-form-group">
                     <label for="staff-address">Ngày sinh:</label>
-                    <input type="date" name="staff-address" [ngModel]="staff.birthDay" (ngModelChange)="staff.birthDay=$event" class="form-control">
+                    <input type="date" name="staff-address" [ngModel]="staff.birthDay | date:'yyyy-MM-dd'" (ngModelChange)="staff.birthDay=$event" class="form-control">
                 </div>
                 <div class="form-group ba-form-group">
-                    <label for="roles">Chức vụ:</label>
-                    <select name="roles" id="roles" class="form-control" [(ngModel)]="staff.staffRole">
-                    <option class="dropdown-item" value="{{role.id}}" *ngFor="let role of roleData">{{role.name}}</option> 
-                  </select>
+                    <label for="staff-idcard">Số CMND:</label>
+                    <input type="text" name="staff-idcard" class="form-control" [(ngModel)]="staff.idCard">
+                </div>
+                <div class="form-group ba-form-group">
+                    <label for="staff-address">Địa chỉ:</label>
+                    <input type="text" name="staff-email" class="form-control" [(ngModel)]="staff.address">
+                </div>
+                <div class="form-group ba-form-group">
+                    <label for="staff-info">Thông tin bổ sung:</label>
+                    <input type="text" name="staff-info" [(ngModel)]="staff.additionInformation" class="form-control">
                 </div>
                 <div class="form-group ba-form-group">
                     <label for="types">Loại nhân viên:</label>
                     <select name="types" id="types" class="form-control" [(ngModel)]="staff.staffType"> 
-                    <option class="dropdown-item" value="{{type.id}}" *ngFor="let type of typeData">{{type.name}}</option> 
-                  </select>
+                        <option class="dropdown-item" value="{{type.id}}" *ngFor="let type of typeData">{{type.name}}</option> 
+                    </select>
+                </div>
+                <div class="form-group ba-form-group">
+                    <label for="roles">Chức vụ:</label>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{getStaffRoles(staff.staffRole)}}
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" *ngFor="let role of roleData" (click)="selectRole(role.id)">
+                                <input type="checkbox" [checked]="staff.staffRole.indexOf(role.id) >= 0 ? true : false" class="checkbox" value="true"> {{role.name}}
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

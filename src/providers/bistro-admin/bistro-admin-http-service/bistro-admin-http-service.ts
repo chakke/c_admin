@@ -144,6 +144,7 @@ export class BistroHttpServiceProvider {
     if (this.isUseFakeData) {
       return new Promise((resolve, reject) => {
         this.requestGet(AssetsUrl.BASE_URL + FakeAPIUrl.RESTAURANT_DETAIL, "").then(data => {
+          console.log("xxx", data);
           if (data && data.content) {
             let restaurants = data.content;
             let index = restaurants.findIndex(elm => {
@@ -158,7 +159,7 @@ export class BistroHttpServiceProvider {
             } else {
               resolve(null);
             }
-          } else {
+          } else { 
             reject();
           }
         });

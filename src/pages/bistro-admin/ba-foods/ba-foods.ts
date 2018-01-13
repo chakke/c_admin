@@ -141,4 +141,11 @@ export class BaFoodsPage {
     });
     alert.present();
   }
+
+  doInfinite(infiniteScroll) {
+    console.log('Begin async operation');
+    setTimeout(() => {
+      infiniteScroll.complete();
+    }, 500);
+  }
 }

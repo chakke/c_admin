@@ -1,21 +1,24 @@
 import { Role } from './role';
-import {Mappingable} from '../interface/mappingable';
-import { STAFF_ROLE_NAME } from '../app-constant';
+import { Mappingable } from '../interface/mappingable';
+import { STAFF_ROLE_NAME, STAFF_TYPE_NAME } from '../app-constant';
 
 export class Staff implements Mappingable {
     accountState: number;
     avatar: string;
     birthDay: Date;
-    email: string; 
+    email: string;
     firebaseId: string;
     firebaseReference: string;
     id: string;
     identify: string;
     name: string;
     phone: string;
-    staffRole: number;
+    staffRole: Array<number>;
     staffType: number;
     userName: string;
+    address: string;
+    additionInformation: string;
+    idCard: string;
     //filed only in client
     staffRoleName: string;
     staffTypeName: string;
@@ -34,11 +37,14 @@ export class Staff implements Mappingable {
         this.identify = "";
         this.name = "";
         this.phone = "";
-        this.staffRole = 0;
+        this.staffRole = [];
         this.staffType = 0;
         this.userName = "";
+        this.address = "";
+        this.additionInformation = "";
         this.staffRoleName = "";
         this.staffTypeName = "";
+        this.idCard = "";
     }
 
     mappingFirebaseData(data) {
@@ -56,8 +62,21 @@ export class Staff implements Mappingable {
             this.staffRole = data.staff_role;
             this.staffType = data.staff_type;
             this.userName = data.user_name;
+            this.address = data.address;
+            this.additionInformation = data.addition_information;
+            this.idCard = data.id_card;
             this.staffRoleName = STAFF_ROLE_NAME[data.staff_role];
-            this.staffTypeName = STAFF_ROLE_NAME[data.staff_type];
+            this.staffTypeName = STAFF_TYPE_NAME[data.staff_type];
         }
+    }
+
+    mappingExcelData(data) {
+        this.name = data.B ? data.B : "";
+        this.birthDay = data.D ? new Date(data.D) : new Date();
+        this.phone = data.E ? data.E : "";
+        this.email = data.F ? data.F : "";
+        this.address = data.G ? data.G : "";
+        this.additionInformation = data.H ? data.H : "";
+        this.idCard = data.I ? data.I : "";
     }
 }
