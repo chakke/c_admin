@@ -23,23 +23,23 @@ export class FirebaseServiceProvider {
   defaultPass: string = "123456";
   constructor(private progressController: ProgressControllerProvider) {
     //main project
-    // firebase.initializeApp({
-    //   apiKey: "AIzaSyDMEZoEtmor-T166lP9bGCR9FxqQP4eGik",
-    //   authDomain: "bistrodancerapp.firebaseapp.com",
-    //   databaseURL: "https://bistrodancerapp.firebaseio.com",
-    //   projectId: "bistrodancerapp",
-    //   storageBucket: "bistrodancerapp.appspot.com",
-    //   messagingSenderId: "773087969883"
-    // });
-    // backup project
     firebase.initializeApp({
-      apiKey: "AIzaSyADH7xZZdoVLadnk4GOux5I5OjDcclrc7c",
-      authDomain: "bistro-backup-e5bc1.firebaseapp.com",
-      databaseURL: "https://bistro-backup-e5bc1.firebaseio.com",
-      projectId: "bistro-backup-e5bc1",
-      storageBucket: "bistro-backup-e5bc1.appspot.com",
-      messagingSenderId: "160393617494"
+      apiKey: "AIzaSyDMEZoEtmor-T166lP9bGCR9FxqQP4eGik",
+      authDomain: "bistrodancerapp.firebaseapp.com",
+      databaseURL: "https://bistrodancerapp.firebaseio.com",
+      projectId: "bistrodancerapp",
+      storageBucket: "bistrodancerapp.appspot.com",
+      messagingSenderId: "773087969883"
     });
+    // backup project
+    // firebase.initializeApp({
+    //   apiKey: "AIzaSyADH7xZZdoVLadnk4GOux5I5OjDcclrc7c",
+    //   authDomain: "bistro-backup-e5bc1.firebaseapp.com",
+    //   databaseURL: "https://bistro-backup-e5bc1.firebaseio.com",
+    //   projectId: "bistro-backup-e5bc1",
+    //   storageBucket: "bistro-backup-e5bc1.appspot.com",
+    //   messagingSenderId: "160393617494"
+    // });
     this.db = firebase.firestore();
   }
 
@@ -336,6 +336,9 @@ export class FirebaseServiceProvider {
 
   getAllFoodTypeInRestaurant(restId: string) {
     return this.getCollection(FIREBASE_PATH.PRODUCT + "/" + restId + "/" + FIREBASE_PATH.FOOD_TYPE);
+  }
 
+  fetchAllTableInRestaurant(restId: string){
+    return this.fetchCollection(FIREBASE_PATH.RESTAURANT + "/" + restId + "/" + FIREBASE_PATH.TABLE);
   }
 }

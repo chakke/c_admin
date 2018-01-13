@@ -566,4 +566,8 @@ export class AppControllerProvider {
       });
     })
   }
+
+  fetchTableInRestaurant(restId: string) {
+    return this.firebaseService.fetchAllTableInRestaurant(restId);
+  }
 }

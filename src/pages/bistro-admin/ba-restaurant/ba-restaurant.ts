@@ -46,10 +46,13 @@ export class BaRestaurantPage {
 
   gotoRestaurantDetail(restaurantId: number) {
     this.appController.pushPage("BaRestaurantDetailPage", { id: restaurantId });
-
   }
 
   gotoMap(restaurant: Restaurant) {
     this.appController.pushPage("BaFloorMapPage", { restId: restaurant.id, restName: restaurant.name });
+  }
+
+  gotoTable(restaurant: Restaurant) {
+    this.appController.pushPage("BaTablesPage", { restId: restaurant.id, restName: restaurant.name });
   }
 }
