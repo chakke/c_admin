@@ -13,6 +13,7 @@ import { ProgressControllerProvider } from '../progress-controller/progress-cont
 import { Staff } from '../classes/staff';
 import { Food, FoodType } from '../classes/food';
 import { FoodCategory } from '../classes/food-category';
+import { Table } from '../classes/table';
 
 @Injectable()
 export class FirebaseServiceProvider {
@@ -23,23 +24,23 @@ export class FirebaseServiceProvider {
   defaultPass: string = "123456";
   constructor(private progressController: ProgressControllerProvider) {
     //main project
-    firebase.initializeApp({
-      apiKey: "AIzaSyDMEZoEtmor-T166lP9bGCR9FxqQP4eGik",
-      authDomain: "bistrodancerapp.firebaseapp.com",
-      databaseURL: "https://bistrodancerapp.firebaseio.com",
-      projectId: "bistrodancerapp",
-      storageBucket: "bistrodancerapp.appspot.com",
-      messagingSenderId: "773087969883"
-    });
-    // backup project
     // firebase.initializeApp({
-    //   apiKey: "AIzaSyADH7xZZdoVLadnk4GOux5I5OjDcclrc7c",
-    //   authDomain: "bistro-backup-e5bc1.firebaseapp.com",
-    //   databaseURL: "https://bistro-backup-e5bc1.firebaseio.com",
-    //   projectId: "bistro-backup-e5bc1",
-    //   storageBucket: "bistro-backup-e5bc1.appspot.com",
-    //   messagingSenderId: "160393617494"
+    //   apiKey: "AIzaSyDMEZoEtmor-T166lP9bGCR9FxqQP4eGik",
+    //   authDomain: "bistrodancerapp.firebaseapp.com",
+    //   databaseURL: "https://bistrodancerapp.firebaseio.com",
+    //   projectId: "bistrodancerapp",
+    //   storageBucket: "bistrodancerapp.appspot.com",
+    //   messagingSenderId: "773087969883"
     // });
+    // backup project
+    firebase.initializeApp({
+      apiKey: "AIzaSyADH7xZZdoVLadnk4GOux5I5OjDcclrc7c",
+      authDomain: "bistro-backup-e5bc1.firebaseapp.com",
+      databaseURL: "https://bistro-backup-e5bc1.firebaseio.com",
+      projectId: "bistro-backup-e5bc1",
+      storageBucket: "bistro-backup-e5bc1.appspot.com",
+      messagingSenderId: "160393617494"
+    });
     this.db = firebase.firestore();
   }
 
@@ -99,6 +100,7 @@ export class FirebaseServiceProvider {
 
   deleteDocument(path: string): Promise<any> {
     this.progressController.add();
+    console.log("delete document", path);
     return new Promise((resolve, reject) => {
       this.db.doc(path).delete().then(success => {
         resolve();
@@ -338,7 +340,30 @@ export class FirebaseServiceProvider {
     return this.getCollection(FIREBASE_PATH.PRODUCT + "/" + restId + "/" + FIREBASE_PATH.FOOD_TYPE);
   }
 
-  fetchAllTableInRestaurant(restId: string){
+  fetchAllTableInRestaurant(restId: string) {
     return this.fetchCollection(FIREBASE_PATH.RESTAURANT + "/" + restId + "/" + FIREBASE_PATH.TABLE);
+  }
+
+  addTableToRestaurant(restId: string, table: Table) {
+    return this.addDocument(FIREBASE_PATH.RESTAURANT + "/" + restId + "/" + FIREBASE_PATH.TABLE, {
+      area_id: table.areaId,
+      area_name: table.areaName,
+      capacity: table.capacity,
+      name: table.name,
+      state: table.state,
+      type: table.type
+    })
+  }
+
+  deleteTable(restId: string, tableId: string) {
+    return this.deleteDocument(FIREBASE_PATH.RESTAURANT + "/" + restId + "/" + FIREBASE_PATH.TABLE + "/" + tableId);
+  }
+
+  getTable(restId: string, tableId: string) {
+    return this.getDocument(FIREBASE_PATH.RESTAURANT + "/" + restId + "/" + FIREBASE_PATH.TABLE + "/" + tableId);
+  }
+
+  updateTable(restId: string, tableId: string, value: any) {
+    return this.updateDocument(FIREBASE_PATH.RESTAURANT + "/" + restId + "/" + FIREBASE_PATH.TABLE + "/" + tableId, value);
   }
 }

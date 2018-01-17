@@ -222,7 +222,6 @@ export const STAFF_TYPE_NAME = {
     2: "Thời vụ"
 }
 
-
 export const FOOD_STATE = {
     NOT_YET: {
         id: 0,
@@ -240,6 +239,25 @@ export const FOOD_STATE = {
         id: 3,
         value: "Ngừng kinh doanh"
     }
+}
+
+
+export const TABLE_STATE = {
+    /**Bàn trống */
+    NO_ORDER: {
+        id: 0,
+        name: "Trống"
+    },
+    /**Bàn trống nhưng có người đặt trước */
+    BOOKED: {
+        id: 1,
+        name: "Đã đặt trước"
+    },
+    /**Đang phục vụ */
+    HAS_ORDER: {
+        id: 2,
+        name: "Đang phục vụ"
+    },
 }
 
 

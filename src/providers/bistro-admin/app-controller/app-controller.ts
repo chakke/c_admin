@@ -25,6 +25,7 @@ import { Mappingable } from '../interface/mappingable';
 import { Staff } from '../classes/staff';
 import { FoodCategory } from '../classes/food-category';
 import { Food, FoodType } from '../classes/food';
+import { Table } from '../classes/table';
 @Injectable()
 export class AppControllerProvider {
 
@@ -569,5 +570,33 @@ export class AppControllerProvider {
 
   fetchTableInRestaurant(restId: string) {
     return this.firebaseService.fetchAllTableInRestaurant(restId);
+  }
+
+  addTableToRestaurant(restId: string, table: Table) {
+    return this.firebaseService.addTableToRestaurant(restId, table);
+  }
+
+  deleteTable(restId: string, tableId: string) {
+    return this.firebaseService.deleteTable(restId, tableId);
+  }
+
+  getTable(restId: string, tableId: string): Promise<Table> {
+    return new Promise((resolve, reject) => {
+      return this.firebaseService.getTable(restId, tableId).then(data => {
+        if (data) {
+          let table = new Table();
+          table.mappingFirebaseData(data);
+          resolve(table);
+        } else {
+          reject();
+        }
+      }, error => {
+        reject(error);
+      })
+    })
+  }
+
+  updateTable(restId: string, tableId: string, value: any) {
+    return this.firebaseService.updateTable(restId, tableId, value);
   }
 }

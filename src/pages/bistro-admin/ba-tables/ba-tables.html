@@ -24,9 +24,8 @@
                         <tr>
                             <th text-center>STT</th>
                             <th>Tên bàn</th>
-                            <th>Sức chứa </th>
+                            <th>Số chỗ</th>
                             <th>Trạng thái</th>
-                            <th>Loại</th>
                             <th>Vị trí</th>
                             <th>Tác vụ</th>
                         </tr>
@@ -34,16 +33,15 @@
                             <td text-center>{{i+1}}</td>
                             <td>{{table.name}}</td>
                             <td>{{table.capacity}}</td>
-                            <td>{{table.state}}</td>
-                            <td>{{table.type}}</td>
+                            <td>{{tableStateCollection.get(table.state)}}</td>
                             <td>{{table.areaName}}</td>
                             <td>
-                                <button class="btn btn-success" (click)="gotoStaffDetail(staff)">
-                                <i class="fa fa-pencil" aria-hidden="true"></i>
-                            </button>
-                                <button class="btn btn-danger" (click)="delete(staff)">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                            </button>
+                                <button class="btn btn-success" (click)="gotoTableDetail(table)">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                </button>
+                                <button class="btn btn-danger" (click)="delete(table)">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
                             </td>
                         </tr>
                     </table>
@@ -70,6 +68,7 @@
                     </span>
                     </li>
                 </ul>
+                <button class="btn btn-danger button-reset" (click)="resetAllTableState()" tappable>Reset trạng thái bàn</button>
             </div>
         </div>
     </div>

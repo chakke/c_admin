@@ -31,13 +31,18 @@ export class Table implements Mappingable {
         if (data) {
             this.areaId = data.area_id;
             this.areaName = data.area_name;
-            this.capacity = data.capacity;
+            this.capacity = +data.capacity;
             this.firebaseId = data.firebaseId;
             this.firebaseReference = data.firebase_reference;
             this.id = data.id;
             this.name = data.name;
-            this.state = data.state;
-            this.type = data.type;
+            this.state = +data.state;
+            this.type = +data.type;
         }
+    }
+
+    mappingExcelData(data) {
+        this.name = data.B ? data.B : "";
+        this.capacity = data.C ? +data.C : data.C; 
     }
 }
